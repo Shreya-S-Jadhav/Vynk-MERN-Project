@@ -22,6 +22,19 @@ const customerSchema = new mongoose.Schema({
         required: true
     },
 
+    profileImage: {
+        type: String,
+        default: ''
+    },
+
+    shippingAddress: {
+        street: { type: String, default: '' },
+        city: { type: String, default: '' },
+        postalCode: { type: String, default: '' },
+        country: { type: String, default: '' }
+    },
+
+
     createdAt: {
         type: Date,
         default: Date.now

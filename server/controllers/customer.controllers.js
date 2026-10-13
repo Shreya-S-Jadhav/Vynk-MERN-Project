@@ -6,6 +6,12 @@ import genToken from "../utils/genToken.js"
 // register customer
 const cookieOptions = {httpOnly: true}
 
+const sanitizeCustomer = (customer) => {
+    const publicCustomer = customer.toObject ? customer.toObject() : { ...customer }
+    delete publicCustomer.password
+    return publicCustomer
+}
+
 const registerCustomer = async (req, res)=>{
     try{
         const {fullName, email, password, phone} = req.body
@@ -22,8 +28,7 @@ const registerCustomer = async (req, res)=>{
         }
 
         const salt = await bcrypt.genSalt(10)
-        console.log(salt)
-
+       
         const hashedPassword = await bcrypt.hash(password, salt)
 
         const newCustomer = await Customer.create({
@@ -36,8 +41,8 @@ const registerCustomer = async (req, res)=>{
         const token = genToken(newCustomer._id)
         res.cookie('token', token, cookieOptions)
 
-        const publicCustomer = newCustomer.toObject()
-        delete publicCustomer.password
+        const publicCustomer = sanitizeCustomer(newCustomer)
+
         return res.status(201).json({success: true, message: 'Customer registered successfully', customer: publicCustomer})
     }
     catch (err) {
@@ -68,8 +73,9 @@ const loginCustomer = async (req, res)=>{
 
         const token = genToken(customer._id)
         res.cookie('token', token, cookieOptions)
-        const publicCustomer = customer.toObject()
-        delete publicCustomer.password
+
+        const publicCustomer = sanitizeCustomer(customer)
+
         return res.status(200).json({success: true, message: "Login Successful", customer: publicCustomer})
     }
     catch (err) {
@@ -83,9 +89,51 @@ const getMe = async (req, res)=>{
     if (!req.customer) {
         return res.status(401).json({message: "Customer not found"})
     }
-    const authenticatedCustomer = req.customer.toObject()
-    delete authenticatedCustomer.password
-    return res.status(200).json({authenticatedCustomer})
+    return res.status(200).json({authenticatedCustomer: sanitizeCustomer(req.customer)})
+}
+
+const updateCustomerProfile = async (req, res) => {
+    try {
+        const { fullName, email, phone, shippingAddress } = req.body
+
+        if (!fullName || !email || !phone) {
+            return res.status(400).json({ message: 'Name, email, and phone are required' })
+        }
+
+        const emailOwner = await Customer.findOne({ email, _id: { $ne: req.customer._id } })
+        if (emailOwner) {
+            return res.status(409).json({ message: 'Email is already in use' })
+        }
+
+        const updatedCustomer = await Customer.findByIdAndUpdate(
+            req.customer._id,
+            { fullName, email, phone, shippingAddress },
+            { new: true, runValidators: true }
+        )
+
+        return res.status(200).json({ customer: sanitizeCustomer(updatedCustomer) })
+    } catch (err) {
+        return res.status(500).json({ message: 'Unable to update profile', error: err.message })
+    }
+}
+
+const uploadCustomerProfileImage = async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ message: 'Please select an image' })
+        }
+
+        const profileImage = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`
+        const updatedCustomer = await Customer.findByIdAndUpdate(
+            req.customer._id,
+            { profileImage },
+            { new: true }
+        )
+
+        return res.status(200).json({ customer: sanitizeCustomer(updatedCustomer) })
+    } catch (err) {
+        return res.status(500).json({ message: 'Unable to upload profile image', error: err.message })
+    }
 }
 
 
@@ -100,4 +148,4 @@ const logoutCustomer = async (req, res)=>{
     }
 }
 
-export { registerCustomer, loginCustomer, getMe, logoutCustomer }
+export { registerCustomer, loginCustomer, getMe, updateCustomerProfile, uploadCustomerProfileImage, logoutCustomer }

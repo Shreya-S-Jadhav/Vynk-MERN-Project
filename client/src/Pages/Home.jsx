@@ -19,7 +19,7 @@ function Home() {
           <span>Nexora</span>
         </Link>
         <div className="market-search" role="search"><span aria-hidden="true">⌕</span><span>Search products, brands and more</span></div>
-        <div className="nav-actions"><Link className="nav-link" to="/home">Orders</Link><span className="cart-link">▱ Cart</span><button className="nav-link logout-button" type="button" onClick={handleLogout}>Log out</button></div>
+        <div className="nav-actions"><Link className="nav-link" to="/profile">Account</Link><Link className="nav-link" to="/home">Orders</Link><span className="cart-link">▱ Cart</span><button className="nav-link logout-button" type="button" onClick={handleLogout}>Log out</button></div>
       </nav>
 
       <section className="home-content">
@@ -40,7 +40,7 @@ function Home() {
         <div className="account-grid shop-account-grid">
           <article className="account-card account-card-primary">
             <div className="card-label"><span className="card-number">01</span> ACCOUNT</div>
-            <div className="profile-row"><span className="profile-avatar">{user?.fullName?.charAt(0)?.toUpperCase() || 'N'}</span><div><h2>{user?.fullName || 'Nexora customer'}</h2><p>{user?.email || 'No email available'}</p></div></div>
+            <Link className="profile-row" to="/profile"><span className="profile-avatar">{user?.fullName?.charAt(0)?.toUpperCase() || 'N'}</span><div><h2>{user?.fullName || 'Nexora customer'}</h2><p>{user?.email || 'No email available'}</p></div></Link>
             <div className="card-detail"><span>Phone</span><strong>{user?.phone || 'Not provided'}</strong></div>
           </article>
           <article className="account-card account-card-secondary">
