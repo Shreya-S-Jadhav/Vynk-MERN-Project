@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { fetchProduct } from '../services/productApi.js'
+import { fetchProduct } from '../axiosCalls/productApi.js'
 
 function formatPrice(price) {
   return `₹${Number(price).toLocaleString('en-IN')}`

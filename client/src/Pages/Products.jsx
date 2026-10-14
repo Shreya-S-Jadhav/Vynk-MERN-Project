@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import ProductCard from '../components/ProductCard.jsx'
 import SearchBar from '../components/SearchBar.jsx'
-import { fetchProducts } from '../services/productApi.js'
+import { fetchProducts } from '../axiosCalls/productApi.js'
 
 
 function Products() {

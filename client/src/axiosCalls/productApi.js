@@ -1,4 +1,4 @@
-import { axiosInstance } from '../axiosCalls/axios.js'
+import { axiosInstance } from './axios.js'
 
 export async function fetchProducts(filters = {}) {
   const response = await axiosInstance.get('/products', { params: filters })
