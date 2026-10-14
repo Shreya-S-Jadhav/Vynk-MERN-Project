@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { axiosInstance } from '../axiosCalls/axios.js'
 import StatusMessage from '../components/StatusMessage.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
+import WishlistNavLink from '../components/WishlistNavLink.jsx'
 
 const emptyAddress = { street: '', city: '', postalCode: '', country: '' }
 
@@ -106,7 +107,7 @@ function CustomerProfile() {
     <main className="profile-page shop-home">
       <nav className="site-nav home-nav" aria-label="Account navigation">
         <Link className="brand" to="/home" aria-label="Back to Nexora home"><span className="brand-mark">N</span><span>Nexora</span></Link>
-        <Link className="nav-link" to="/home">Back to shopping</Link>
+         <div className="nav-actions"><WishlistNavLink /><Link className="nav-link" to="/home">Back to shopping</Link></div>
       </nav>
 
       <section className="profile-content">

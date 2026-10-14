@@ -34,6 +34,14 @@ const customerSchema = new mongoose.Schema({
         country: { type: String, default: '' }
     },
 
+    wishlist: {
+        type: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Product'
+        }],
+        default: []
+    },
+
 
     createdAt: {
         type: Date,

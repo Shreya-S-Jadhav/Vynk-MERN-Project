@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { fetchProduct } from '../axiosCalls/productApi.js'
+import WishlistNavLink from '../components/WishlistNavLink.jsx'
 
 function formatPrice(price) {
   return `₹${Number(price).toLocaleString('en-IN')}`
@@ -37,7 +38,7 @@ function ProductDetails() {
 
   return (
     <main className="catalog-page shop-home">
-      <nav className="site-nav home-nav" aria-label="Product navigation"><Link className="brand" to="/home"><span className="brand-mark">N</span><span>Nexora</span></Link><Link className="nav-link" to="/products">Back to products</Link></nav>
+      <nav className="site-nav home-nav" aria-label="Product navigation"><Link className="brand" to="/home"><span className="brand-mark">N</span><span>Nexora</span></Link><div className="nav-actions"><WishlistNavLink /><Link className="nav-link" to="/products">Back to products</Link></div></nav>
       <section className="product-detail-content">
         <Link className="text-link" to="/products">← All products</Link>
         <div className="product-detail-layout">

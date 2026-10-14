@@ -6,6 +6,7 @@ import cors from 'cors'
 
 import customerRoutes from './routes/customer.routes.js'
 import productRoutes from './routes/product.routes.js'
+import wishlistRoutes from './routes/wishlist.routes.js'
 
 const app = express()
 const Port = 8084
@@ -27,6 +28,7 @@ app.use(express.json())
 
 app.use('/customer', customerRoutes)
 app.use('/products', productRoutes)
+app.use('/wishlist', wishlistRoutes)
 
 app.get('/', (req, res) => {
     res.send("Server is running")
