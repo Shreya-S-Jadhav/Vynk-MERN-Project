@@ -1,197 +1,322 @@
 @import 'tailwindcss';
 
 /* ==========================================================================
-   VYNK DESIGN SYSTEM
-   Modern, Minimalist, High-Performance Commerce
+   VYNK — KINETIC OBSIDIAN DESIGN SYSTEM
+   Bespoke, Editorial, Dark Glass & Fluid Atmospheric Aesthetics
    ========================================================================== */
 
 :root {
-  --font-sans: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  --bg-page: #f8fafc;
-  --bg-surface: #ffffff;
-  --bg-muted: #f1f5f9;
-  
-  --text-main: #0f172a;
-  --text-secondary: #475569;
-  --text-muted: #94a3b8;
-  
-  --primary: #4f46e5;
-  --primary-hover: #4338ca;
-  --primary-soft: #eef2ff;
-  --primary-ring: rgba(79, 70, 229, 0.2);
+  --font-display: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
 
-  --success: #10b981;
-  --success-soft: #ecfdf5;
-  --danger: #ef4444;
-  --danger-soft: #fef2f2;
-  
-  --border: #e2e8f0;
-  --border-focus: #6366f1;
+  /* Atmospheric Palette */
+  --bg-deep: #07080d;
+  --bg-surface: rgba(15, 18, 28, 0.75);
+  --bg-surface-elevated: rgba(22, 27, 42, 0.85);
+  --bg-card: rgba(18, 22, 34, 0.65);
+  --bg-card-hover: rgba(26, 32, 50, 0.85);
+  --bg-input: rgba(8, 10, 16, 0.7);
 
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
+  /* Luminous Kinetic Accents */
+  --accent-primary: #6366f1;
+  --accent-primary-hover: #4f46e5;
+  --accent-secondary: #a855f7;
+  --accent-cyan: #06b6d4;
+  --accent-emerald: #10b981;
+  --accent-rose: #f43f5e;
+  --accent-amber: #f59e0b;
 
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
+  /* Typography Colors */
+  --text-pure: #ffffff;
+  --text-main: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+
+  /* Glass Borders & Rim Lighting */
+  --border-glass: rgba(255, 255, 255, 0.08);
+  --border-glass-hover: rgba(99, 102, 241, 0.45);
+  --border-subtle: rgba(255, 255, 255, 0.04);
+
+  /* Radii */
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
   --radius-xl: 24px;
+  --radius-full: 9999px;
 }
 
-* {
+/* Base Reset */
+*, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
+html {
+  color-scheme: dark !important;
+  scroll-behavior: smooth;
+  background-color: var(--bg-deep) !important;
+}
+
 body {
   font-family: var(--font-sans);
-  background-color: var(--bg-page);
+  background-color: var(--bg-deep) !important;
   color: var(--text-main);
-  line-height: 1.5;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   min-height: 100vh;
+  overflow-x: hidden;
+}
+
+#root {
+  background-color: var(--bg-deep) !important;
+  min-height: 100vh;
+}
+
+/* Razorpay modal container overrides to maintain dark theme */
+.razorpay-container,
+.razorpay-backdrop,
+iframe[name^="razorpay"] {
+  background-color: rgba(7, 8, 13, 0.88) !important;
 }
 
 a {
   color: inherit;
   text-decoration: none;
-}
-
-button, input, select, textarea {
-  font: inherit;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 button {
+  font-family: inherit;
   cursor: pointer;
   border: none;
   background: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Page Wrappers */
+input, select, textarea {
+  font-family: inherit;
+  color: inherit;
+  outline: none;
+  color-scheme: dark;
+}
+
+option {
+  background-color: #0e121e;
+  color: #f1f5f9;
+}
+
+/* ==========================================================================
+   KINETIC ANIMATED BACKGROUND
+   ========================================================================== */
+
+.vynk-kinetic-bg-container {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.vynk-kinetic-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.vynk-kinetic-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, transparent 40%, rgba(7, 8, 13, 0.8) 100%);
+  pointer-events: none;
+}
+
+.vynk-relative-content {
+  position: relative;
+  z-index: 1;
+}
+
+/* ==========================================================================
+   PAGE WRAPPERS & CONTAINERS
+   ========================================================================== */
+
 .vynk-page-wrapper {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+  position: relative;
+  background: var(--bg-deep);
+}
+
+.vynk-kinetic-page {
+  background: transparent;
 }
 
 .vynk-main-container {
-  width: 100%;
   max-width: 1240px;
+  width: 100%;
   margin: 0 auto;
-  padding: 36px 24px 80px;
+  padding: 3rem 1.5rem 6rem;
   flex: 1;
 }
 
 /* ==========================================================================
-   NAVBAR COMPONENT
+   KINETIC MARQUEE TICKER
+   ========================================================================== */
+
+.vynk-marquee-strip {
+  width: 100%;
+  overflow: hidden;
+  background: rgba(15, 18, 28, 0.5);
+  border-bottom: 1px solid var(--border-glass);
+  padding: 0.65rem 0;
+  position: relative;
+  z-index: 5;
+  backdrop-filter: blur(8px);
+}
+
+.vynk-marquee-track {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+  width: max-content;
+  white-space: nowrap;
+  animation: vynkMarquee 35s linear infinite;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.vynk-marquee-dot {
+  color: var(--accent-cyan);
+}
+
+@keyframes vynkMarquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ==========================================================================
+   NAVIGATION BAR
    ========================================================================== */
 
 .vynk-navbar-header {
   position: sticky;
   top: 0;
   z-index: 50;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  background: rgba(255, 255, 255, 0.82);
-  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+  background: rgba(7, 8, 13, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-glass);
 }
 
 .vynk-navbar-container {
   max-width: 1240px;
   margin: 0 auto;
-  padding: 0 24px;
-  height: 68px;
+  padding: 1rem 1.5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 1.5rem;
 }
 
 .vynk-brand {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 0.75rem;
 }
 
 .vynk-brand-badge {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
   color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-family: var(--font-display);
   font-weight: 800;
-  font-size: 18px;
-  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+  font-size: 1.15rem;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.vynk-brand:hover .vynk-brand-badge {
+  transform: scale(1.08) rotate(3deg);
 }
 
 .vynk-brand-name {
-  font-size: 20px;
+  font-family: var(--font-display);
+  font-size: 1.45rem;
   font-weight: 700;
   letter-spacing: -0.03em;
-  color: var(--text-main);
+  color: var(--text-pure);
 }
 
 .vynk-nav-actions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 0.75rem;
 }
 
 .vynk-nav-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 14px;
-  font-size: 14px;
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
   font-weight: 500;
   color: var(--text-secondary);
-  border-radius: var(--radius-sm);
-  transition: all 0.15s ease;
+  padding: 0.5rem 0.9rem;
+  border-radius: var(--radius-full);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
 }
 
 .vynk-nav-link:hover {
-  color: var(--text-main);
-  background: rgba(241, 245, 249, 0.8);
+  color: var(--text-pure);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .vynk-nav-link.active {
-  color: var(--primary);
-  background: var(--primary-soft);
-  font-weight: 600;
+  color: var(--text-pure);
+  background: rgba(99, 102, 241, 0.15);
+  border: 1px solid rgba(99, 102, 241, 0.35);
 }
 
 .vynk-counter-pill {
-  padding: 2px 7px;
-  border-radius: 9999px;
-  background: var(--primary);
+  background: linear-gradient(135deg, #6366f1, #a855f7);
   color: #ffffff;
-  font-size: 11px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
   font-weight: 700;
-  line-height: 1;
-}
-
-.vynk-wishlist-pill {
-  background: #f43f5e;
+  padding: 0.15rem 0.45rem;
+  border-radius: var(--radius-full);
+  min-width: 1.25rem;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.5);
 }
 
 .vynk-account-link {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-glass);
 }
 
 .vynk-avatar-mini {
-  width: 26px;
-  height: 26px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
-  background: #e0e7ff;
-  color: #4338ca;
-  font-size: 12px;
+  background: linear-gradient(135deg, #06b6d4, #6366f1);
+  color: #fff;
+  font-size: 0.72rem;
   font-weight: 700;
   display: flex;
   align-items: center;
@@ -199,496 +324,571 @@ button {
 }
 
 .vynk-nav-logout-btn {
-  padding: 8px 12px;
-  font-size: 13px;
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
   font-weight: 500;
   color: var(--text-muted);
-  border-radius: var(--radius-sm);
-  transition: all 0.15s ease;
+  padding: 0.45rem 0.8rem;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .vynk-nav-logout-btn:hover {
-  color: var(--danger);
-  background: var(--danger-soft);
+  color: var(--accent-rose);
+  border-color: rgba(244, 63, 94, 0.3);
+  background: rgba(244, 63, 94, 0.08);
 }
 
 /* ==========================================================================
-   BUTTONS & BADGES
+   BUTTONS & CTAS
    ========================================================================== */
 
 .vynk-btn-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: var(--primary);
+  gap: 0.5rem;
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
   color: #ffffff;
   font-weight: 600;
+  font-size: 0.92rem;
+  padding: 0.75rem 1.4rem;
   border-radius: var(--radius-md);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 2px 4px rgba(79, 70, 229, 0.2);
+  box-shadow: 0 4px 16px rgba(79, 70, 229, 0.35);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .vynk-btn-primary:hover:not(:disabled) {
-  background: var(--primary-hover);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(79, 70, 229, 0.55);
+  background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
 }
 
-.vynk-btn-primary:active:not(:disabled) {
-  transform: translateY(0);
+.vynk-btn-glow {
+  position: relative;
 }
 
-.vynk-btn-primary:disabled {
+.vynk-btn-glow::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  background: linear-gradient(135deg, #6366f1, #a855f7);
+  border-radius: inherit;
+  z-index: -1;
+  filter: blur(12px);
   opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
+  transition: opacity 0.3s ease;
 }
 
-.vynk-btn-secondary {
+.vynk-btn-glow:hover::after {
+  opacity: 1;
+}
+
+.vynk-btn-secondary, .vynk-btn-glass {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: #ffffff;
-  color: var(--text-main);
-  border: 1px solid var(--border);
-  font-weight: 600;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  color: var(--text-pure);
+  font-weight: 500;
+  font-size: 0.92rem;
+  padding: 0.75rem 1.4rem;
   border-radius: var(--radius-md);
+  border: 1px solid var(--border-glass);
   transition: all 0.2s ease;
 }
 
-.vynk-btn-secondary:hover:not(:disabled) {
-  background: var(--bg-muted);
-  border-color: #cbd5e1;
+.vynk-btn-secondary:hover, .vynk-btn-glass:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
 }
 
 .vynk-btn-sm {
-  padding: 6px 14px;
-  font-size: 13px;
+  padding: 0.5rem 1rem;
+  font-size: 0.82rem;
+  border-radius: var(--radius-sm);
 }
 
 .vynk-btn-md {
-  padding: 10px 18px;
-  font-size: 14px;
+  padding: 0.7rem 1.3rem;
+  font-size: 0.9rem;
 }
 
 .vynk-btn-lg {
-  padding: 13px 24px;
-  font-size: 15px;
+  padding: 0.95rem 1.9rem;
+  font-size: 1.05rem;
+  border-radius: var(--radius-lg);
 }
 
 .vynk-btn-block {
   width: 100%;
 }
 
-.vynk-greeting-badge {
-  display: inline-block;
-  padding: 4px 12px;
-  border-radius: 9999px;
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  background: var(--primary-soft);
-  color: var(--primary);
-  margin-bottom: 12px;
-}
-
-.vynk-page-title {
-  font-size: clamp(28px, 4vw, 40px);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  color: var(--text-main);
-  line-height: 1.15;
-}
-
-.vynk-page-title span {
-  color: var(--primary);
-}
-
-.vynk-page-desc {
-  margin-top: 8px;
-  font-size: 15px;
-  color: var(--text-secondary);
-  max-width: 600px;
-}
-
-.vynk-badge-free {
-  padding: 3px 8px;
-  border-radius: 6px;
-  background: var(--success-soft);
-  color: var(--success);
-  font-size: 12px;
-  font-weight: 700;
+.vynk-btn-primary:disabled, .vynk-btn-secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
 }
 
 /* ==========================================================================
-   HERO & DASHBOARD
+   HEADINGS & HERO SECTIONS
    ========================================================================== */
 
+.vynk-home-hero, .vynk-catalog-header {
+  margin-bottom: 3.5rem;
+}
+
 .vynk-landing-hero {
-  max-width: 900px;
-  margin: 60px auto 40px;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 5rem 1.5rem 6rem;
   text-align: center;
-  padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.vynk-hero-badge {
-  display: inline-block;
-  padding: 6px 14px;
-  border-radius: 9999px;
-  background: #ffffff;
-  border: 1px solid var(--border);
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--primary);
-  box-shadow: var(--shadow-sm);
-  margin-bottom: 24px;
+.vynk-status-pill, .vynk-greeting-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  padding: 0.4rem 1rem;
+  border-radius: var(--radius-full);
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  letter-spacing: 0.12em;
+  color: #a5b4fc;
+  margin-bottom: 1.75rem;
 }
 
-.vynk-hero-title {
-  font-size: clamp(38px, 6vw, 64px);
-  font-weight: 800;
+.vynk-pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-cyan);
+  box-shadow: 0 0 10px var(--accent-cyan);
+  animation: vynkPulse 2s infinite;
+}
+
+@keyframes vynkPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+.vynk-hero-headline, .vynk-page-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  font-weight: 700;
+  line-height: 1.15;
   letter-spacing: -0.04em;
-  line-height: 1.08;
-  color: var(--text-main);
+  color: var(--text-pure);
+  margin-bottom: 1.25rem;
 }
 
-.vynk-hero-title span {
-  background: linear-gradient(135deg, #4f46e5 0%, #9333ea 100%);
+.vynk-catalog-header {
+  margin-bottom: 2.25rem;
+  padding-top: 0.5rem;
+}
+
+.vynk-catalog-header .vynk-page-title {
+  font-size: clamp(2rem, 3.8vw, 3.2rem);
+  margin-bottom: 0.85rem;
+}
+
+.vynk-catalog-header .vynk-page-desc {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  max-width: 580px;
+  margin-bottom: 1.5rem;
+  line-height: 1.55;
+}
+
+.vynk-glow-text, .vynk-hero-headline span, .vynk-page-title span {
+  background: linear-gradient(135deg, #818cf8 0%, #c084fc 50%, #38bdf8 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  display: inline-block;
 }
 
-.vynk-hero-subtitle {
-  margin: 20px auto 36px;
-  font-size: 18px;
+.vynk-hero-subtext, .vynk-page-desc {
+  font-size: 1.12rem;
   color: var(--text-secondary);
   max-width: 640px;
+  margin-bottom: 2.5rem;
   line-height: 1.6;
 }
 
 .vynk-hero-actions {
   display: flex;
-  gap: 14px;
+  align-items: center;
   justify-content: center;
+  gap: 1.25rem;
   flex-wrap: wrap;
+  margin-bottom: 4.5rem;
 }
 
+/* Features grid */
 .vynk-features-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-  margin-top: 80px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
   text-align: left;
 }
 
 .vynk-feature-card {
-  background: #ffffff;
-  border: 1px solid var(--border);
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border-glass);
   border-radius: var(--radius-lg);
-  padding: 28px;
-  box-shadow: var(--shadow-sm);
+  padding: 1.8rem;
+  transition: all 0.3s ease;
+}
+
+.vynk-feature-card:hover {
+  background: var(--bg-card-hover);
+  border-color: rgba(99, 102, 241, 0.35);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 32px -10px rgba(0, 0, 0, 0.6);
+}
+
+.vynk-feature-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.vynk-feature-code {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--accent-cyan);
 }
 
 .vynk-feature-icon {
-  font-size: 28px;
-  display: block;
-  margin-bottom: 14px;
+  font-size: 1.4rem;
 }
 
 .vynk-feature-card h3 {
-  font-size: 17px;
-  font-weight: 700;
-  margin-bottom: 6px;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text-pure);
+  margin-bottom: 0.5rem;
 }
 
 .vynk-feature-card p {
-  font-size: 14px;
+  font-size: 0.88rem;
   color: var(--text-secondary);
   line-height: 1.5;
 }
 
-/* Member Dashboard Cards */
-.vynk-dashboard-hero {
-  margin-bottom: 36px;
-}
-
-.vynk-dashboard-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 24px;
-}
-
-.vynk-dash-card {
-  background: #ffffff;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 32px;
-  box-shadow: var(--shadow-sm);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.vynk-dash-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-}
-
-.vynk-dash-featured {
-  background: linear-gradient(135deg, #ffffff 0%, #f5f3ff 100%);
-  border-color: #ddd6fe;
-}
-
-.vynk-dash-card-header {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
-.vynk-dash-pill {
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  letter-spacing: 0.05em;
-}
-
-.vynk-dash-icon {
-  font-size: 24px;
-}
-
-.vynk-dash-card h2 {
-  font-size: 22px;
-  font-weight: 700;
-  margin-bottom: 8px;
-  color: var(--text-main);
-}
-
-.vynk-dash-card p {
-  font-size: 14px;
-  color: var(--text-secondary);
-  margin-bottom: 24px;
-  flex: 1;
-}
-
 /* ==========================================================================
-   PRODUCT CATALOGUE & FILTER BAR
+   METRICS DOCK & COMMAND DECK
    ========================================================================== */
 
-.vynk-catalog-header {
-  margin-bottom: 28px;
+.vynk-metrics-dock {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
 }
 
-.vynk-filter-bar {
+.vynk-metric-chip {
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  padding: 1.2rem 1.4rem;
   display: flex;
-  gap: 14px;
-  margin-bottom: 32px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 0.35rem;
+  transition: all 0.25s ease;
 }
 
-.vynk-search-box {
-  flex: 1;
-  min-width: 260px;
-  position: relative;
-  display: flex;
-  align-items: center;
+.vynk-metric-chip:hover {
+  background: var(--bg-card-hover);
+  border-color: rgba(99, 102, 241, 0.4);
+  transform: translateY(-2px);
 }
 
-.vynk-search-icon {
-  position: absolute;
-  left: 14px;
+.vynk-metric-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
   color: var(--text-muted);
+}
+
+.vynk-metric-val {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-pure);
+}
+
+.vynk-metric-meta {
+  font-size: 0.82rem;
+  color: var(--accent-cyan);
+}
+
+.vynk-dash-tiles-section {
+  margin-bottom: 4rem;
+}
+
+.vynk-section-header-compact {
+  margin-bottom: 1.25rem;
+}
+
+.vynk-section-tag {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  color: var(--accent-cyan);
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.vynk-section-title-sm {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-pure);
+}
+
+.vynk-dash-tiles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+
+.vynk-dash-tile {
+  background: var(--bg-card);
+  backdrop-filter: blur(18px);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  padding: 1.8rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 220px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.vynk-dash-tile:hover {
+  background: var(--bg-card-hover);
+  border-color: rgba(99, 102, 241, 0.45);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.7);
+}
+
+.vynk-tile-spotlight {
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+.vynk-tile-spotlight .vynk-tile-glow {
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.35) 0%, transparent 70%);
   pointer-events: none;
 }
 
-.vynk-search-input {
-  width: 100%;
-  height: 46px;
-  padding: 0 38px 0 42px;
-  background: #ffffff;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  font-size: 14px;
-  color: var(--text-main);
-  outline: none;
-  transition: all 0.15s ease;
-  box-shadow: var(--shadow-sm);
+.vynk-tile-badge {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: var(--accent-cyan);
+  margin-bottom: 1rem;
 }
 
-.vynk-search-input:focus {
-  border-color: var(--border-focus);
-  box-shadow: 0 0 0 3px var(--primary-ring);
+.vynk-tile-content {
+  margin-bottom: 1.5rem;
 }
 
-.vynk-search-clear {
-  position: absolute;
-  right: 12px;
-  font-size: 14px;
+.vynk-tile-num {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
   color: var(--text-muted);
-  padding: 4px;
+  display: block;
+  margin-bottom: 0.4rem;
 }
 
-.vynk-select-group {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
+.vynk-dash-tile h3 {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-pure);
+  margin-bottom: 0.5rem;
 }
 
-.vynk-select-control {
-  height: 46px;
-  padding: 0 16px;
-  background: #ffffff;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--text-main);
-  outline: none;
-  cursor: pointer;
-  box-shadow: var(--shadow-sm);
-}
-
-.vynk-select-control:focus {
-  border-color: var(--border-focus);
-}
-
-.vynk-reset-filters-btn {
-  height: 46px;
-  padding: 0 16px;
-  background: var(--bg-muted);
+.vynk-dash-tile p {
+  font-size: 0.88rem;
   color: var(--text-secondary);
-  border-radius: var(--radius-md);
-  font-size: 13px;
+  line-height: 1.5;
+}
+
+.vynk-tile-action {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
   font-weight: 600;
-  transition: all 0.15s ease;
+  color: #a5b4fc;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
 }
 
-.vynk-reset-filters-btn:hover {
-  background: #e2e8f0;
-  color: var(--text-main);
+.vynk-dash-tile:hover .vynk-tile-action {
+  color: var(--text-pure);
+  transform: translateX(3px);
 }
 
-/* Product Cards & Grid */
+/* ==========================================================================
+   PRODUCT CATALOG & CARDS
+   ========================================================================== */
+
 .vynk-products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 1.75rem;
 }
 
 .vynk-product-card {
-  background: #ffffff;
-  border: 1px solid var(--border);
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border-glass);
   border-radius: var(--radius-lg);
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: var(--shadow-sm);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
 }
 
 .vynk-product-card:hover {
-  transform: translateY(-4px);
-  border-color: #cbd5e1;
-  box-shadow: var(--shadow-lg);
+  background: var(--bg-card-hover);
+  border-color: rgba(99, 102, 241, 0.4);
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.8);
 }
 
 .vynk-card-image-wrapper {
   position: relative;
   width: 100%;
-  aspect-ratio: 4 / 3;
+  padding-top: 75%;
+  background: #0d1017;
   overflow: hidden;
-  background: #f1f5f9;
+}
+
+.vynk-card-image-link {
+  position: absolute;
+  inset: 0;
 }
 
 .vynk-card-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.35s ease;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .vynk-product-card:hover .vynk-card-image {
-  transform: scale(1.05);
+  transform: scale(1.06);
 }
 
 .vynk-wishlist-toggle {
   position: absolute;
   top: 12px;
   right: 12px;
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(8px);
+  background: rgba(7, 8, 13, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--text-muted);
-  transition: all 0.2s ease;
-  box-shadow: var(--shadow-sm);
+  color: var(--text-secondary);
+  z-index: 2;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .vynk-wishlist-toggle:hover {
-  background: #ffffff;
-  color: #f43f5e;
-  transform: scale(1.1);
+  transform: scale(1.15);
+  color: var(--accent-rose);
+  background: rgba(7, 8, 13, 0.9);
 }
 
 .vynk-wishlist-toggle.active {
-  background: #ffffff;
-  color: #f43f5e;
+  color: var(--accent-rose);
+  background: rgba(244, 63, 94, 0.15);
+  border-color: rgba(244, 63, 94, 0.4);
 }
 
 .vynk-card-badge-stock {
   position: absolute;
   bottom: 12px;
   left: 12px;
-  padding: 3px 8px;
-  background: rgba(15, 23, 42, 0.75);
-  backdrop-filter: blur(4px);
-  color: #ffffff;
-  font-size: 11px;
+  background: rgba(245, 158, 11, 0.2);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  color: #fbbf24;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
   font-weight: 600;
-  border-radius: 6px;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-full);
+  backdrop-filter: blur(8px);
 }
 
 .vynk-card-body {
-  padding: 20px;
+  padding: 1.4rem;
   display: flex;
   flex-direction: column;
   flex: 1;
 }
 
 .vynk-card-category {
-  font-size: 11px;
-  font-weight: 700;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--primary);
-  margin-bottom: 6px;
+  color: var(--accent-cyan);
+  margin-bottom: 0.45rem;
+}
+
+.vynk-card-title-link {
+  margin-bottom: 0.45rem;
 }
 
 .vynk-card-title {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--text-main);
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text-pure);
   line-height: 1.35;
-  margin-bottom: 8px;
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  transition: color 0.2s ease;
+}
+
+.vynk-card-title:hover {
+  color: #a5b4fc;
 }
 
 .vynk-card-desc {
-  font-size: 13px;
+  font-size: 0.85rem;
   color: var(--text-secondary);
   line-height: 1.5;
-  margin-bottom: 18px;
+  margin-bottom: 1.25rem;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -700,51 +900,287 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  padding-top: 14px;
-  border-top: 1px solid var(--border);
+  gap: 0.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-glass);
+}
+
+.vynk-card-price-col {
+  display: flex;
+  flex-direction: column;
 }
 
 .vynk-card-price {
-  font-size: 18px;
-  font-weight: 800;
-  color: var(--text-main);
-  letter-spacing: -0.02em;
-  display: block;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-pure);
 }
 
 .vynk-card-stock-indicator {
-  font-size: 11px;
-  color: var(--success);
-  font-weight: 600;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--accent-emerald);
 }
 
 .vynk-btn-cart {
-  padding: 8px 16px;
-  background: var(--bg-muted);
-  color: var(--text-main);
-  border-radius: var(--radius-sm);
-  font-size: 13px;
+  background: rgba(99, 102, 241, 0.15);
+  border: 1px solid rgba(99, 102, 241, 0.4);
+  color: #c7d2fe;
+  font-size: 0.82rem;
   font-weight: 600;
+  padding: 0.55rem 0.95rem;
+  border-radius: var(--radius-sm);
   transition: all 0.2s ease;
-  white-space: nowrap;
 }
 
 .vynk-btn-cart:hover:not(:disabled) {
-  background: var(--primary);
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
   color: #ffffff;
-}
-
-.vynk-btn-cart:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
+  border-color: #6366f1;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+  transform: translateY(-1px);
 }
 
 .vynk-card-alert {
-  margin-top: 8px;
-  font-size: 12px;
-  color: var(--primary);
+  font-size: 0.78rem;
+  color: #38bdf8;
+  margin-top: 0.65rem;
+  text-align: center;
+}
+
+/* ==========================================================================
+   SEARCH BAR & CATEGORY FILTERS (ELEVATED CATALOG TOOLBAR)
+   ========================================================================== */
+
+.vynk-catalog-toolbar {
+  background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-xl);
+  padding: 1.5rem;
+  margin-bottom: 2.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.6);
+  position: relative;
+  z-index: 20;
+}
+
+.vynk-search-row-elevated {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.vynk-search-field-wrap {
+  flex: 1;
+  min-width: 280px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.vynk-search-icon {
+  position: absolute;
+  left: 16px;
+  color: var(--accent-cyan);
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+.vynk-search-input-elevated {
+  width: 100%;
+  background: rgba(7, 8, 13, 0.75);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  padding: 0.85rem 2.8rem 0.85rem 3rem;
+  color: var(--text-pure);
+  font-size: 0.94rem;
+  transition: all 0.25s ease;
+}
+
+.vynk-search-input-elevated:focus {
+  border-color: var(--accent-primary);
+  background: rgba(7, 8, 13, 0.95);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25), 0 0 20px rgba(99, 102, 241, 0.15);
+}
+
+.vynk-search-clear-btn {
+  position: absolute;
+  right: 14px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  transition: all 0.2s ease;
+}
+
+.vynk-search-clear-btn:hover {
+  background: rgba(244, 63, 94, 0.2);
+  color: var(--accent-rose);
+}
+
+/* Custom Obsidian Dark Sort Dropdown */
+.vynk-custom-select-wrap {
+  position: relative;
+}
+
+.vynk-sort-trigger {
+  background: rgba(7, 8, 13, 0.75);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  padding: 0.82rem 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--text-pure);
+  font-size: 0.88rem;
+  transition: all 0.2s ease;
+}
+
+.vynk-sort-trigger:hover, .vynk-sort-trigger.active {
+  background: rgba(14, 18, 30, 0.95);
+  border-color: rgba(99, 102, 241, 0.5);
+}
+
+.vynk-sort-trigger.has-val {
+  border-color: rgba(99, 102, 241, 0.55);
+  background: rgba(99, 102, 241, 0.15);
+}
+
+.vynk-sort-label-dim {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.vynk-sort-current-val {
   font-weight: 600;
+  color: var(--text-pure);
+}
+
+.vynk-sort-chevron {
+  color: var(--text-muted);
+  transition: transform 0.2s ease;
+}
+
+.vynk-sort-chevron.open {
+  transform: rotate(180deg);
+  color: var(--accent-cyan);
+}
+
+.vynk-sort-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 210px;
+  background: #0d101a;
+  border: 1px solid var(--border-glass-hover);
+  border-radius: var(--radius-md);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  list-style: none;
+  padding: 0.4rem;
+  margin: 0;
+  z-index: 100;
+  animation: vynkMenuDrop 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes vynkMenuDrop {
+  from { opacity: 0; transform: translateY(-6px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.vynk-sort-option {
+  padding: 0.65rem 0.9rem;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.86rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.vynk-sort-option:hover {
+  background: rgba(99, 102, 241, 0.15);
+  color: var(--text-pure);
+}
+
+.vynk-sort-option.selected {
+  background: rgba(99, 102, 241, 0.22);
+  color: #c7d2fe;
+  font-weight: 600;
+}
+
+.vynk-sort-check {
+  color: var(--accent-cyan);
+  font-weight: 700;
+}
+
+.vynk-reset-filters-pill {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  padding: 0.5rem 0.9rem;
+  border-radius: var(--radius-full);
+  background: rgba(244, 63, 94, 0.12);
+  border: 1px solid rgba(244, 63, 94, 0.3);
+  color: #fb7185;
+  transition: all 0.2s ease;
+}
+
+.vynk-reset-filters-pill:hover {
+  background: rgba(244, 63, 94, 0.22);
+  border-color: rgba(244, 63, 94, 0.5);
+  transform: translateY(-1px);
+}
+
+/* Category Filter Pills (1-Click selection) */
+.vynk-category-pills-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border-glass);
+}
+
+.vynk-cat-pill {
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  font-weight: 500;
+  padding: 0.45rem 1rem;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.035);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.vynk-cat-pill:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-pure);
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+}
+
+.vynk-cat-pill.active {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.3) 0%, rgba(168, 85, 247, 0.25) 100%);
+  color: #ffffff;
+  border-color: rgba(99, 102, 241, 0.6);
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.25);
 }
 
 /* ==========================================================================
@@ -754,44 +1190,57 @@ button {
 .vynk-breadcrumb {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  color: var(--text-secondary);
-  margin-bottom: 28px;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 2rem;
 }
 
 .vynk-back-link {
-  font-weight: 600;
-  color: var(--primary);
+  color: #a5b4fc;
+  font-weight: 500;
 }
 
 .vynk-breadcrumb-sep {
-  color: var(--text-muted);
+  color: var(--border-glass);
 }
 
 .vynk-breadcrumb-current {
-  color: var(--text-main);
-  font-weight: 500;
+  color: var(--text-pure);
+  font-weight: 600;
 }
 
 .vynk-product-detail-layout {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 48px;
-  align-items: start;
+  gap: 3.5rem;
+  background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-xl);
+  padding: 3rem;
+}
+
+@media (max-width: 900px) {
+  .vynk-product-detail-layout {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 1.75rem;
+  }
 }
 
 .vynk-detail-image-box {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-lg);
   overflow: hidden;
-  background: #ffffff;
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow-md);
+  background: #0d1017;
+  border: 1px solid var(--border-glass);
+  position: relative;
+  padding-top: 80%;
 }
 
 .vynk-detail-image-box img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -803,122 +1252,125 @@ button {
 }
 
 .vynk-detail-category-badge {
-  display: inline-block;
-  padding: 4px 10px;
-  border-radius: 6px;
-  background: var(--primary-soft);
-  color: var(--primary);
-  font-size: 12px;
-  font-weight: 700;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.15em;
+  color: var(--accent-cyan);
   text-transform: uppercase;
-  margin-bottom: 12px;
-  align-self: flex-start;
+  margin-bottom: 0.75rem;
 }
 
 .vynk-detail-title {
-  font-size: clamp(28px, 3.5vw, 40px);
-  font-weight: 800;
-  line-height: 1.15;
-  color: var(--text-main);
-  margin-bottom: 16px;
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--text-pure);
+  margin-bottom: 1rem;
+  line-height: 1.2;
 }
 
 .vynk-detail-price-row {
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin-bottom: 24px;
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
 }
 
 .vynk-detail-price {
-  font-size: 32px;
-  font-weight: 800;
-  color: var(--primary);
-  letter-spacing: -0.02em;
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffffff;
 }
 
 .vynk-stock-chip {
-  padding: 4px 10px;
-  border-radius: 9999px;
-  font-size: 12px;
-  font-weight: 600;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-full);
 }
 
 .vynk-stock-chip.in-stock {
-  background: var(--success-soft);
-  color: var(--success);
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
 }
 
 .vynk-stock-chip.out-of-stock {
-  background: var(--danger-soft);
-  color: var(--danger);
+  background: rgba(244, 63, 94, 0.15);
+  color: #fb7185;
+  border: 1px solid rgba(244, 63, 94, 0.3);
 }
 
 .vynk-detail-desc {
-  font-size: 16px;
+  font-size: 1rem;
   color: var(--text-secondary);
   line-height: 1.7;
-  margin-bottom: 32px;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-glass);
 }
 
 .vynk-detail-guarantees {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 18px 22px;
-  border-radius: var(--radius-md);
-  background: var(--bg-muted);
-  font-size: 13px;
-  font-weight: 600;
+  gap: 0.6rem;
+  font-size: 0.88rem;
   color: var(--text-secondary);
-  margin-bottom: 32px;
+  margin-bottom: 2rem;
 }
 
 .vynk-detail-action-box {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 0.9rem;
 }
 
 /* ==========================================================================
-   CART & CHECKOUT
+   CART PAGE
    ========================================================================== */
 
-.vynk-cart-layout, .vynk-checkout-layout {
+.vynk-cart-layout {
   display: grid;
-  grid-template-columns: 1.35fr 0.65fr;
-  gap: 36px;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 2rem;
   align-items: start;
+}
+
+@media (max-width: 920px) {
+  .vynk-cart-layout {
+    grid-template-columns: 1fr;
+  }
 }
 
 .vynk-cart-items-column {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 1rem;
 }
 
 .vynk-cart-row-card {
-  background: #ffffff;
-  border: 1px solid var(--border);
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border-glass);
   border-radius: var(--radius-lg);
-  padding: 20px;
+  padding: 1.25rem;
   display: flex;
-  gap: 20px;
+  gap: 1.25rem;
   align-items: center;
-  box-shadow: var(--shadow-sm);
-  transition: border-color 0.15s ease;
+  transition: all 0.2s ease;
 }
 
 .vynk-cart-row-card:hover {
-  border-color: #cbd5e1;
+  border-color: rgba(99, 102, 241, 0.35);
 }
 
 .vynk-cart-thumb-wrap {
-  width: 96px;
-  height: 96px;
+  width: 90px;
+  height: 90px;
   border-radius: var(--radius-md);
   overflow: hidden;
-  background: #f1f5f9;
+  background: #0d1017;
   flex-shrink: 0;
 }
 
@@ -930,250 +1382,262 @@ button {
 
 .vynk-cart-row-info {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
 }
 
 .vynk-cart-row-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 12px;
+  margin-bottom: 0.75rem;
 }
 
 .vynk-cart-row-title {
-  font-size: 17px;
-  font-weight: 700;
-  color: var(--text-main);
-  line-height: 1.25;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-pure);
 }
 
 .vynk-cart-row-unit-price {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--text-muted);
 }
 
 .vynk-cart-row-controls {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 1rem;
   flex-wrap: wrap;
-  gap: 16px;
-  padding-top: 10px;
-  border-top: 1px solid #f1f5f9;
 }
 
 .vynk-stepper {
   display: inline-flex;
   align-items: center;
-  border: 1px solid var(--border);
+  background: rgba(8, 10, 16, 0.8);
+  border: 1px solid var(--border-glass);
   border-radius: var(--radius-sm);
   overflow: hidden;
-  background: #ffffff;
 }
 
 .vynk-stepper button {
-  width: 34px;
-  height: 34px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
+  padding: 0.35rem 0.75rem;
+  color: var(--text-secondary);
   font-weight: 600;
-  color: var(--text-main);
-  transition: background 0.15s ease;
+  font-size: 0.95rem;
 }
 
 .vynk-stepper button:hover:not(:disabled) {
-  background: var(--bg-muted);
-}
-
-.vynk-stepper button:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
+  color: var(--text-pure);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .vynk-stepper-val {
-  min-width: 36px;
-  text-align: center;
-  font-size: 14px;
-  font-weight: 700;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0 0.6rem;
+  color: var(--text-pure);
+}
+
+.vynk-cart-row-total-group {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.vynk-cart-line-label {
+  font-size: 0.82rem;
+  color: var(--text-muted);
 }
 
 .vynk-cart-line-price {
-  font-size: 16px;
-  font-weight: 800;
-  color: var(--primary);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #ffffff;
 }
 
 .vynk-cart-remove-btn {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--danger);
-  padding: 4px 8px;
-  border-radius: 6px;
-  transition: background 0.15s ease;
+  font-size: 0.8rem;
+  color: var(--accent-rose);
+  padding: 0.3rem 0.65rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(244, 63, 94, 0.25);
+  background: rgba(244, 63, 94, 0.06);
 }
 
 .vynk-cart-remove-btn:hover:not(:disabled) {
-  background: var(--danger-soft);
+  background: rgba(244, 63, 94, 0.15);
+  border-color: rgba(244, 63, 94, 0.4);
 }
 
-/* Order Summary Cards */
+/* Cart Summary */
 .vynk-cart-summary-card {
-  position: sticky;
-  top: 96px;
-  background: #ffffff;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
-  padding: 28px;
-  box-shadow: var(--shadow-md);
+  background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  padding: 1.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
 }
 
 .vynk-summary-heading {
-  font-size: 20px;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
   font-weight: 700;
-  margin-bottom: 20px;
+  color: var(--text-pure);
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-glass);
 }
 
 .vynk-summary-row {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-  font-size: 14px;
+  font-size: 0.92rem;
   color: var(--text-secondary);
-}
-
-.vynk-summary-row strong {
-  font-weight: 700;
-  color: var(--text-main);
 }
 
 .vynk-summary-divider {
   height: 1px;
-  background: var(--border);
-  margin: 18px 0;
+  background: var(--border-glass);
+  margin: 0.25rem 0;
 }
 
 .vynk-summary-grand {
-  font-size: 17px;
-  color: var(--text-main);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-pure);
+  padding-top: 0.5rem;
 }
 
-.vynk-summary-grand strong {
-  font-size: 24px;
-  font-weight: 800;
-  color: var(--primary);
+.vynk-badge-free {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent-emerald);
 }
 
 .vynk-summary-assurance {
-  margin-top: 18px;
-  text-align: center;
-  font-size: 12px;
+  font-size: 0.8rem;
   color: var(--text-muted);
+  text-align: center;
+  margin-top: 0.5rem;
 }
 
-/* Checkout Form */
+/* ==========================================================================
+   CHECKOUT PAGE
+   ========================================================================== */
+
+.vynk-checkout-layout {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+@media (max-width: 920px) {
+  .vynk-checkout-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
 .vynk-checkout-form-card {
-  background: #ffffff;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
-  padding: 32px;
-  box-shadow: var(--shadow-sm);
+  background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  padding: 2.2rem;
 }
 
 .vynk-form-section-title {
-  font-size: 20px;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
   font-weight: 700;
-  margin-bottom: 24px;
-  color: var(--text-main);
+  color: var(--text-pure);
+  margin-bottom: 1.5rem;
 }
 
 .vynk-form-stack {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 1.1rem;
+}
+
+.vynk-form-row-tri {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 600px) {
+  .vynk-form-row-tri {
+    grid-template-columns: 1fr;
+  }
 }
 
 .vynk-form-field {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 0.4rem;
 }
 
 .vynk-field-label {
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
 }
 
 .vynk-field-input {
-  width: 100%;
-  height: 46px;
-  padding: 0 16px;
-  border: 1px solid var(--border);
+  background: rgba(8, 10, 16, 0.7);
+  border: 1px solid var(--border-glass);
   border-radius: var(--radius-md);
-  font-size: 14px;
-  color: var(--text-main);
-  background: #ffffff;
-  outline: none;
-  transition: all 0.15s ease;
+  padding: 0.8rem 1rem;
+  color: var(--text-pure);
+  font-size: 0.92rem;
+  transition: all 0.2s ease;
 }
 
 .vynk-field-input:focus {
-  border-color: var(--border-focus);
-  box-shadow: 0 0 0 3px var(--primary-ring);
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3);
 }
 
 .vynk-field-input.input-error {
-  border-color: var(--danger);
-  background: var(--danger-soft);
+  border-color: var(--accent-rose);
 }
 
 .vynk-field-error-text {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--danger);
-}
-
-.vynk-form-row-tri {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
-}
-
-.vynk-form-row-duo {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
+  font-size: 0.78rem;
+  color: var(--accent-rose);
 }
 
 .vynk-checkout-items-scroll {
+  max-height: 240px;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  max-height: 280px;
-  overflow-y: auto;
-  padding-right: 4px;
+  gap: 0.75rem;
+  padding-right: 0.25rem;
 }
 
 .vynk-checkout-item-row {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 0.75rem;
 }
 
 .vynk-checkout-item-img {
   width: 48px;
   height: 48px;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-xs);
   object-fit: cover;
-  background: var(--bg-muted);
+  background: #0d1017;
+  flex-shrink: 0;
 }
 
 .vynk-checkout-item-details {
@@ -1181,270 +1645,140 @@ button {
 }
 
 .vynk-checkout-item-details h4 {
-  font-size: 13px;
+  font-size: 0.88rem;
   font-weight: 600;
-  color: var(--text-main);
-  line-height: 1.3;
+  color: var(--text-pure);
 }
 
 .vynk-checkout-item-sub {
-  font-size: 12px;
-  color: var(--text-secondary);
+  font-size: 0.78rem;
+  color: var(--text-muted);
 }
 
 .vynk-checkout-item-total {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--text-main);
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  color: var(--text-pure);
 }
 
 /* ==========================================================================
-   ORDER SUCCESS & ORDERS HISTORY
+   ORDERS PAGE
    ========================================================================== */
 
-.vynk-success-card-wrapper {
-  max-width: 740px;
-  margin: 0 auto;
-}
-
-.vynk-success-header {
-  text-align: center;
-  margin-bottom: 32px;
-}
-
-.vynk-success-check-badge {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 32px;
-  font-weight: 800;
-  margin: 0 auto 16px;
-  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
-}
-
-.vynk-receipt-box {
-  background: #ffffff;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
-  padding: 32px;
-  box-shadow: var(--shadow-md);
-}
-
-.vynk-receipt-meta-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-  padding-bottom: 24px;
-  border-bottom: 1px solid var(--border);
-}
-
-.vynk-receipt-meta-col {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.vynk-status-pill {
-  display: inline-block;
-  padding: 3px 10px;
-  border-radius: 9999px;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  align-self: flex-start;
-}
-
-.status-paid {
-  background: var(--success-soft);
-  color: var(--success);
-}
-
-.status-placed {
-  background: #e0f2fe;
-  color: #0369a1;
-}
-
-.status-confirmed {
-  background: var(--primary-soft);
-  color: var(--primary);
-}
-
-.status-shipped {
-  background: #fef3c7;
-  color: #d97706;
-}
-
-.status-delivered {
-  background: #dcfce7;
-  color: #15803d;
-}
-
-.status-pending_payment {
-  background: #fef3c7;
-  color: #b45309;
-}
-
-.vynk-receipt-section {
-  padding: 20px 0;
-  border-bottom: 1px solid var(--border);
-}
-
-.vynk-receipt-section h4 {
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  letter-spacing: 0.05em;
-  margin-bottom: 10px;
-}
-
-.vynk-receipt-items-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.vynk-receipt-item-row {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.vynk-receipt-item-row img {
-  width: 44px;
-  height: 44px;
-  border-radius: var(--radius-sm);
-  object-fit: cover;
-}
-
-.vynk-receipt-item-details {
-  flex: 1;
-}
-
-.vynk-receipt-item-details strong {
-  display: block;
-  font-size: 14px;
-  color: var(--text-main);
-}
-
-.vynk-receipt-item-details span {
-  font-size: 12px;
-  color: var(--text-muted);
-}
-
-.vynk-receipt-item-price {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--text-main);
-}
-
-.vynk-receipt-total-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-top: 20px;
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.vynk-receipt-total-row strong {
-  font-size: 26px;
-  font-weight: 800;
-  color: var(--primary);
-}
-
-.vynk-success-actions {
-  display: flex;
-  gap: 14px;
-  justify-content: center;
-  margin-top: 32px;
-}
-
-/* Orders History Stack */
 .vynk-orders-stack {
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  margin-top: 32px;
+  gap: 1.5rem;
 }
 
 .vynk-order-card {
-  background: #ffffff;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
+  background: var(--bg-card);
+  backdrop-filter: blur(18px);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
   overflow: hidden;
-  box-shadow: var(--shadow-sm);
 }
 
 .vynk-order-card-header {
+  background: rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid var(--border-glass);
+  padding: 1.25rem 1.6rem;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1.5fr;
-  gap: 16px;
-  padding: 20px 28px;
-  background: var(--bg-muted);
-  border-bottom: 1px solid var(--border);
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
   align-items: center;
 }
 
 .vynk-order-meta-group {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 0.25rem;
 }
 
 .vynk-order-meta-right {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 6px;
+  gap: 0.4rem;
 }
 
 .vynk-pills-row {
   display: flex;
-  gap: 6px;
+  gap: 0.5rem;
+}
+
+.vynk-status-pill {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-full);
+  margin-bottom: 0;
+}
+
+.status-placed, .status-paid {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.status-confirmed {
+  background: rgba(6, 182, 212, 0.15);
+  color: #38bdf8;
+  border: 1px solid rgba(6, 182, 212, 0.3);
+}
+
+.status-shipped {
+  background: rgba(99, 102, 241, 0.15);
+  color: #a5b4fc;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+}
+
+.status-delivered {
+  background: rgba(168, 85, 247, 0.15);
+  color: #c084fc;
+  border: 1px solid rgba(168, 85, 247, 0.3);
+}
+
+.status-pending_payment {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
 }
 
 .vynk-order-card-body {
-  padding: 28px;
+  padding: 1.6rem;
 }
 
 .vynk-order-items-grid {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 0.9rem;
+  margin-bottom: 1.5rem;
 }
 
 .vynk-order-item-chip {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 1rem;
 }
 
 .vynk-order-thumb {
-  width: 60px;
-  height: 60px;
-  border-radius: var(--radius-sm);
+  width: 50px;
+  height: 50px;
+  border-radius: var(--radius-xs);
   object-fit: cover;
-  background: var(--bg-muted);
-  flex-shrink: 0;
+  background: #0d1017;
 }
 
 .vynk-order-thumb-empty {
-  width: 60px;
-  height: 60px;
-  border-radius: var(--radius-sm);
-  background: var(--bg-muted);
+  width: 50px;
+  height: 50px;
+  border-radius: var(--radius-xs);
+  background: rgba(255, 255, 255, 0.05);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
-  flex-shrink: 0;
 }
 
 .vynk-order-item-desc {
@@ -1452,339 +1786,380 @@ button {
 }
 
 .vynk-order-item-desc h4 {
-  font-size: 15px;
-  font-weight: 700;
-  margin-bottom: 4px;
-  color: var(--text-main);
+  font-size: 0.92rem;
+  color: var(--text-pure);
 }
 
 .vynk-order-item-desc span {
-  font-size: 13px;
-  color: var(--text-secondary);
+  font-size: 0.8rem;
+  color: var(--text-muted);
 }
 
 .vynk-order-item-line-total {
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--text-main);
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  color: var(--text-pure);
 }
 
 .vynk-order-card-footer {
-  margin-top: 24px;
-  padding-top: 20px;
-  border-top: 1px solid var(--border);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border-glass);
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 1rem;
 }
 
 .vynk-order-address-text {
-  font-size: 13px;
+  font-size: 0.85rem;
   color: var(--text-secondary);
-  max-width: 65%;
 }
 
 .vynk-order-actions-row {
   display: flex;
-  gap: 10px;
-  align-items: center;
+  gap: 0.75rem;
 }
 
 .vynk-advance-btn {
-  padding: 7px 14px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #a5b4fc;
+  background: rgba(99, 102, 241, 0.15);
+  border: 1px solid rgba(99, 102, 241, 0.4);
+  padding: 0.45rem 0.9rem;
   border-radius: var(--radius-sm);
-  background: var(--primary-soft);
-  color: var(--primary);
-  font-size: 12px;
-  font-weight: 700;
-  transition: all 0.15s ease;
 }
 
 .vynk-advance-btn:hover:not(:disabled) {
-  background: #e0e7ff;
+  background: rgba(99, 102, 241, 0.3);
+  color: #ffffff;
 }
 
 /* ==========================================================================
-   AUTH PAGES & PROFILE
+   ORDER SUCCESS & CONFIRMATION
    ========================================================================== */
 
-.vynk-auth-page {
-  min-height: 100vh;
+.vynk-success-card-wrapper {
+  max-width: 680px;
+  margin: 0 auto;
+  background: var(--bg-card);
+  backdrop-filter: blur(24px);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-xl);
+  padding: 3rem;
+  text-align: center;
+}
+
+.vynk-success-check-badge {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #ffffff;
+  font-size: 2rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 32px 20px;
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  margin: 0 auto 1.5rem;
+  box-shadow: 0 0 30px rgba(16, 185, 129, 0.4);
+}
+
+.vynk-receipt-box {
+  margin-top: 2rem;
+  text-align: left;
+  background: rgba(8, 10, 16, 0.6);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  padding: 1.8rem;
+}
+
+.vynk-receipt-meta-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr 1fr;
+  gap: 1.25rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border-glass);
+  margin-bottom: 1.25rem;
+  align-items: start;
+}
+
+@media (max-width: 650px) {
+  .vynk-receipt-meta-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+}
+
+.vynk-receipt-meta-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.vynk-order-id-code {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--accent-cyan);
+  word-break: break-all;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+}
+
+.vynk-receipt-section {
+  margin-top: 1.5rem;
+}
+
+.vynk-receipt-section h4 {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+
+.vynk-receipt-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.vynk-receipt-item-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1rem;
+  transition: all 0.2s ease;
+}
+
+.vynk-receipt-item-row:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+.vynk-receipt-thumb {
+  width: 58px;
+  height: 58px;
+  border-radius: var(--radius-xs);
+  object-fit: cover;
+  background: #0d1017;
+  flex-shrink: 0;
+  border: 1px solid var(--border-glass);
+}
+
+.vynk-receipt-thumb-fallback {
+  width: 58px;
+  height: 58px;
+  border-radius: var(--radius-xs);
+  background: rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.vynk-receipt-item-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.vynk-receipt-item-details h5 {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-pure);
+  line-height: 1.3;
+}
+
+.vynk-receipt-item-qty {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.vynk-receipt-item-price {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.vynk-receipt-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 0.25rem;
+  font-size: 1.05rem;
+}
+
+.vynk-receipt-total-row span {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.vynk-receipt-total-row strong {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.vynk-success-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2.25rem;
+  flex-wrap: wrap;
+}
+
+/* ==========================================================================
+   CUSTOMER PROFILE
+   ========================================================================== */
+
+.vynk-profile-card {
+  max-width: 680px;
+  margin: 0 auto;
+  background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-xl);
+  padding: 2.8rem;
+}
+
+/* ==========================================================================
+   AUTH PAGES (LOGIN & SIGNUP)
+   ========================================================================== */
+
+.vynk-auth-page {
+  min-height: 85vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.5rem;
 }
 
 .vynk-auth-card {
   width: 100%;
   max-width: 440px;
-  background: #ffffff;
-  border: 1px solid var(--border);
+  background: var(--bg-card);
+  backdrop-filter: blur(24px);
+  border: 1px solid var(--border-glass);
   border-radius: var(--radius-xl);
-  padding: 40px;
-  box-shadow: var(--shadow-xl);
+  padding: 2.8rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
 }
 
 .vynk-auth-header {
   text-align: center;
-  margin-bottom: 28px;
+  margin-bottom: 2rem;
 }
 
 .vynk-auth-header h2 {
-  font-size: 24px;
-  font-weight: 800;
-  color: var(--text-main);
-  letter-spacing: -0.02em;
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-pure);
+  margin-bottom: 0.4rem;
 }
 
 .vynk-auth-header p {
-  font-size: 14px;
+  font-size: 0.9rem;
   color: var(--text-secondary);
-  margin-top: 4px;
-}
-
-.vynk-auth-form {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
 }
 
 .vynk-auth-footer {
-  margin-top: 24px;
+  margin-top: 1.75rem;
   text-align: center;
-  font-size: 14px;
+  font-size: 0.88rem;
   color: var(--text-secondary);
 }
 
 .vynk-link-accent {
-  color: var(--primary);
+  color: #a5b4fc;
   font-weight: 600;
 }
 
 .vynk-link-accent:hover {
   text-decoration: underline;
-}
-
-/* Profile Grid */
-.vynk-profile-grid {
-  display: grid;
-  grid-template-columns: 0.35fr 0.65fr;
-  gap: 32px;
-  align-items: start;
-}
-
-.vynk-profile-side-card {
-  background: #ffffff;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
-  padding: 32px;
-  text-align: center;
-  box-shadow: var(--shadow-sm);
-}
-
-.vynk-profile-avatar-box {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  background: var(--primary-soft);
-  color: var(--primary);
-  font-size: 38px;
-  font-weight: 800;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 18px;
-  overflow: hidden;
-  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.15);
-}
-
-.vynk-profile-avatar-box img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.vynk-upload-label {
-  display: inline-block;
-  padding: 6px 14px;
-  border-radius: var(--radius-sm);
-  background: var(--bg-muted);
-  color: var(--text-main);
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.vynk-upload-label:hover {
-  background: #e2e8f0;
-}
-
-.vynk-file-note {
-  margin-top: 8px;
-  font-size: 11px;
-  color: var(--text-muted);
-}
-
-.vynk-user-email-tag {
-  margin-top: 20px;
-  font-size: 12px;
-  color: var(--text-secondary);
-  word-break: break-all;
-}
-
-.vynk-profile-main-card {
-  background: #ffffff;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
-  padding: 36px;
-  box-shadow: var(--shadow-sm);
+  color: #c084fc;
 }
 
 /* ==========================================================================
-   ALERTS, SPINNERS & EMPTY STATES
+   FEEDBACK & SPINNERS
    ========================================================================== */
 
+.vynk-alert-error {
+  background: rgba(244, 63, 94, 0.12);
+  border: 1px solid rgba(244, 63, 94, 0.35);
+  color: #fb7185;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+}
+
+.vynk-alert-success {
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  color: #34d399;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+}
+
 .vynk-loading-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 100px 20px;
-  gap: 16px;
-  color: var(--text-secondary);
+  text-align: center;
+  padding: 4rem 1.5rem;
 }
 
 .vynk-spinner {
   width: 36px;
   height: 36px;
-  border: 3px solid var(--border);
-  border-top-color: var(--primary);
+  border: 3px solid rgba(99, 102, 241, 0.2);
+  border-top-color: #6366f1;
   border-radius: 50%;
-  animation: vynk-spin 0.8s linear infinite;
+  animation: vynkSpin 0.8s linear infinite;
+  margin: 0 auto 1rem;
 }
 
-@keyframes vynk-spin {
+@keyframes vynkSpin {
   to { transform: rotate(360deg); }
 }
 
-.vynk-empty-card {
-  background: #ffffff;
-  border: 1px dashed #cbd5e1;
-  border-radius: var(--radius-xl);
-  padding: 60px 24px;
+.vynk-empty-card, .vynk-empty-state {
   text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
+  padding: 4rem 1.5rem;
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  border: 1px dashed var(--border-glass);
+  border-radius: var(--radius-xl);
+  max-width: 540px;
+  margin: 2rem auto;
 }
 
 .vynk-empty-icon {
-  font-size: 44px;
+  font-size: 2.8rem;
+  margin-bottom: 1rem;
   display: block;
 }
 
-.vynk-empty-card h3 {
-  font-size: 20px;
+.vynk-empty-card h3, .vynk-empty-title {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
   font-weight: 700;
-  color: var(--text-main);
+  color: var(--text-pure);
+  margin-bottom: 0.5rem;
 }
 
-.vynk-empty-card p {
-  font-size: 14px;
+.vynk-empty-card p, .vynk-empty-desc {
+  font-size: 0.92rem;
   color: var(--text-secondary);
-  max-width: 440px;
-}
-
-.vynk-alert-error {
-  padding: 12px 18px;
-  border-radius: var(--radius-md);
-  background: var(--danger-soft);
-  border: 1px solid #fecaca;
-  color: #b91c1c;
-  font-size: 13px;
-  font-weight: 500;
-}
-
-.vynk-alert-success {
-  padding: 12px 18px;
-  border-radius: var(--radius-md);
-  background: var(--success-soft);
-  border: 1px solid #a7f3d0;
-  color: #047857;
-  font-size: 13px;
-  font-weight: 500;
-}
-
-/* ==========================================================================
-   RESPONSIVE QUERIES
-   ========================================================================== */
-
-@media (max-width: 900px) {
-  .vynk-cart-layout,
-  .vynk-checkout-layout,
-  .vynk-product-detail-layout,
-  .vynk-profile-grid {
-    grid-template-columns: 1fr;
-    gap: 28px;
-  }
-
-  .vynk-order-card-header {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .vynk-order-meta-right {
-    align-items: flex-start;
-  }
-
-  .vynk-features-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 640px) {
-  .vynk-dashboard-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .vynk-navbar-container {
-    height: 60px;
-    padding: 0 16px;
-  }
-
-  .vynk-brand-name {
-    display: none;
-  }
-
-  .vynk-form-row-tri,
-  .vynk-form-row-duo {
-    grid-template-columns: 1fr;
-  }
-
-  .vynk-receipt-meta-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .vynk-order-address-text {
-    max-width: 100%;
-  }
-
-  .vynk-cart-row-card {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .vynk-cart-thumb-wrap {
-    width: 100%;
-    height: 180px;
-  }
-
-  .vynk-cart-row-controls {
-    width: 100%;
-  }
+  margin-bottom: 1.75rem;
 }

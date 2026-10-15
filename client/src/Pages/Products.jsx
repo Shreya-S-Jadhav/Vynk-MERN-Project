@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import ProductCard from '../components/ProductCard.jsx'
 import SearchBar from '../components/SearchBar.jsx'
 import Navbar from '../components/Navbar.jsx'
+import KineticBackground from '../components/KineticBackground.jsx'
 import { fetchProducts } from '../axiosCalls/productApi.js'
 import { fetchWishlist } from '../axiosCalls/WishlistApi.js'
 
@@ -61,20 +62,23 @@ function Products() {
   }
 
   return (
-    <div className="vynk-page-wrapper">
+    <div className="vynk-page-wrapper vynk-kinetic-page">
+      <KineticBackground />
       <Navbar />
 
-      <main className="vynk-main-container">
+      <main className="vynk-main-container vynk-relative-content">
         <header className="vynk-catalog-header">
-          <div>
-            <div className="vynk-greeting-badge">The Vynk Collection</div>
-            <h1 className="vynk-page-title">
-              Designed for <span>everyday excellence.</span>
-            </h1>
-            <p className="vynk-page-desc">
-              Browse our high-grade hardware, minimalist desk setups, and premium lifestyle audio.
-            </p>
+          <div className="vynk-status-pill">
+            <span className="vynk-pulse-dot" />
+            <span>VYNK CATALOGUE // ARCHIVE INDEX</span>
           </div>
+          <h1 className="vynk-hero-headline">
+            Curated Artifacts.<br />
+            <span className="vynk-glow-text">Everyday excellence.</span>
+          </h1>
+          <p className="vynk-hero-subtext">
+            High-grade industrial electronics, acoustic systems, and precision workspace architecture.
+          </p>
         </header>
 
         <SearchBar
@@ -88,17 +92,17 @@ function Products() {
         />
 
         {loading && (
-          <div className="vynk-loading-state">
-            <div className="vynk-spinner" />
-            <p>Loading curated catalogue...</p>
+          <div className="vynk-empty-state">
+            <div className="vynk-pulse-dot" style={{ margin: '0 auto 1.5rem', width: 14, height: 14 }} />
+            <p className="vynk-empty-desc">Accessing indexed hardware...</p>
           </div>
         )}
 
         {!loading && error && (
-          <div className="vynk-empty-card">
+          <div className="vynk-empty-state">
             <span className="vynk-empty-icon">⚠️</span>
-            <h3>Unable to fetch products</h3>
-            <p>{error}</p>
+            <h3 className="vynk-empty-title">Catalogue connection error</h3>
+            <p className="vynk-empty-desc">{error}</p>
             <button type="button" className="vynk-btn-secondary" onClick={loadProducts}>
               Retry Connection
             </button>
@@ -106,10 +110,10 @@ function Products() {
         )}
 
         {!loading && !error && products.length === 0 && (
-          <div className="vynk-empty-card">
+          <div className="vynk-empty-state">
             <span className="vynk-empty-icon">🔍</span>
-            <h3>No products found</h3>
-            <p>Try searching with different keywords or clearing your active filters.</p>
+            <h3 className="vynk-empty-title">No artifacts found</h3>
+            <p className="vynk-empty-desc">Try clearing filters or searching for alternative gear keywords.</p>
             <button type="button" className="vynk-btn-primary" onClick={resetFilters}>
               Clear All Filters
             </button>

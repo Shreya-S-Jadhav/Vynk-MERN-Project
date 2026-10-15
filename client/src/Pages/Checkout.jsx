@@ -105,7 +105,14 @@ function Checkout() {
         description: 'Order Checkout',
         order_id: razorpayOrderId,
         prefill: { name: form.fullName, contact: form.phone, email: user?.email || '' },
-        theme: { color: '#4f46e5' },
+        theme: { color: '#6366f1', backdrop_color: '#07080d' },
+        modal: {
+          backdropclose: false,
+          ondismiss: () => {
+            setSubmitting(false)
+            setFeedback({ error: 'Payment window closed. You can retry checkout.', status: '' })
+          }
+        },
         handler: (res) => handleVerify(shopKartOrderId, res),
       })
 

@@ -52,22 +52,22 @@ function OrderSuccess() {
         <div className="vynk-success-card-wrapper">
           <div className="vynk-success-header">
             <div className="vynk-success-check-badge">✓</div>
-            <span className="vynk-greeting-badge" style={{ color: '#059669', background: '#ecfdf5', borderColor: '#a7f3d0' }}>
-              Payment Verified & Processed
-            </span>
-            <h1 className="vynk-page-title" style={{ marginTop: '12px' }}>
+            <div className="vynk-status-pill status-placed" style={{ marginBottom: '16px' }}>
+              ● PAYMENT VERIFIED & PROCESSED
+            </div>
+            <h1 className="vynk-hero-headline" style={{ fontSize: 'clamp(2rem, 4vw, 2.8rem)', marginBottom: '0.75rem' }}>
               Order Confirmed<span>!</span>
             </h1>
-            <p className="vynk-page-desc">
-              Thank you for shopping with Vynk. Your order has been placed and is being prepped for dispatch.
+            <p className="vynk-page-desc" style={{ margin: '0 auto 1.5rem', maxWidth: '520px' }}>
+              Thank you for shopping with Vynk. Your requisition is logged and being prepped for dispatch.
             </p>
           </div>
 
           <div className="vynk-receipt-box">
             <div className="vynk-receipt-meta-grid">
-              <div className="vynk-receipt-meta-col">
+              <div className="vynk-receipt-meta-col vynk-order-num-col">
                 <span className="vynk-field-label">Order Number</span>
-                <strong>#{order?._id || id}</strong>
+                <strong className="vynk-order-id-code">#{order?._id || id}</strong>
               </div>
               <div className="vynk-receipt-meta-col">
                 <span className="vynk-field-label">Date</span>
@@ -86,7 +86,7 @@ function OrderSuccess() {
             {order?.shippingAddress && (
               <div className="vynk-receipt-section">
                 <h4>Shipping Address</h4>
-                <p>
+                <p className="vynk-order-address-text" style={{ marginTop: '4px' }}>
                   <strong>{order.shippingAddress.fullName}</strong> • {order.shippingAddress.phone}<br />
                   {order.shippingAddress.addressLine1}, {order.shippingAddress.city}, {order.shippingAddress.state} – {order.shippingAddress.pincode}
                 </p>
@@ -99,10 +99,14 @@ function OrderSuccess() {
                 <div className="vynk-receipt-items-list">
                   {order.items.map((item, idx) => (
                     <div className="vynk-receipt-item-row" key={idx}>
-                      {item.image && <img src={item.image} alt={item.name} />}
+                      {item.image ? (
+                        <img src={item.image} alt={item.name} className="vynk-receipt-thumb" />
+                      ) : (
+                        <div className="vynk-receipt-thumb-fallback">📦</div>
+                      )}
                       <div className="vynk-receipt-item-details">
-                        <strong>{item.name}</strong>
-                        <span>Qty: {item.quantity}</span>
+                        <h5>{item.name}</h5>
+                        <span className="vynk-receipt-item-qty">Qty: {item.quantity} × {formatPrice(item.price)}</span>
                       </div>
                       <span className="vynk-receipt-item-price">
                         {formatPrice(Number(item.price) * Number(item.quantity))}
@@ -113,7 +117,7 @@ function OrderSuccess() {
               </div>
             )}
 
-            <div className="vynk-summary-divider" />
+            <div className="vynk-summary-divider" style={{ margin: '1.25rem 0' }} />
 
             <div className="vynk-receipt-total-row">
               <span>Total Amount Paid</span>

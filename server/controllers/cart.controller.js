@@ -71,7 +71,17 @@ export const getCart = async (req, res) => {
             return res.status(401).json({ message: 'Customer not found' })
         }
 
-        const activeCart = (customer.cart || []).filter((item) => item.product)
+        const rawCart = customer.cart || []
+        const activeCart = rawCart.filter((item) => item.product)
+
+        if (activeCart.length !== rawCart.length) {
+            customer.cart = activeCart.map((item) => ({
+                product: item.product._id,
+                quantity: item.quantity
+            }))
+            await customer.save()
+        }
+
         return res.status(200).json({
             success: true,
             cart: activeCart

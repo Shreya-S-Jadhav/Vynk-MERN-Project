@@ -34,27 +34,32 @@ export const createPaymentOrder = async (req, res) => {
       return res.status(401).json({ message: 'Customer not found' })
     }
 
-    const cart = customer.cart || []
-    if (cart.length === 0) {
+    const rawCart = customer.cart || []
+    if (rawCart.length === 0) {
       return res.status(400).json({ message: 'Your cart is empty' })
     }
 
-    const productIds = cart.map((item) => item.product)
+    const productIds = rawCart.map((item) => item.product).filter(Boolean)
     const products = await Product.find({ _id: { $in: productIds } })
     const productMap = new Map(products.map((p) => [p._id.toString(), p]))
+
+    // Automatically prune any deleted/stale products from the customer's cart
+    const validCart = rawCart.filter((item) => item.product && productMap.has(item.product.toString()))
+    if (validCart.length !== rawCart.length) {
+      customer.cart = validCart
+      await customer.save()
+    }
+
+    if (validCart.length === 0) {
+      return res.status(400).json({ message: 'The items in your cart are no longer available' })
+    }
 
     const orderItems = []
     let calculatedTotal = 0
 
-    for (const item of cart) {
+    for (const item of validCart) {
       const productIdStr = item.product.toString()
       const product = productMap.get(productIdStr)
-
-      if (!product) {
-        return res.status(400).json({
-          message: 'One of the products in your cart is no longer available',
-        })
-      }
 
       if (product.stock < item.quantity) {
         return res.status(400).json({

@@ -9,32 +9,33 @@ function formatPrice(price) {
 
 function Cart() {
   const { cartItems, cartLoading, cartError, subtotal, updateQuantity, removeFromCart, refreshCart } = useCart()
-  const [updatingId, setUpdatingId] = useState('')
+  const [updatingQtyId, setUpdatingQtyId] = useState('')
+  const [removingId, setRemovingId] = useState('')
   const [actionError, setActionError] = useState('')
   const navigate = useNavigate()
 
   const handleQuantityChange = async (productId, nextQuantity) => {
     if (!productId || nextQuantity < 1) return
     setActionError('')
-    setUpdatingId(productId)
+    setUpdatingQtyId(productId)
     try {
       await updateQuantity(productId, nextQuantity)
     } catch (err) {
       setActionError(err.response?.data?.message || 'Failed to update quantity.')
     } finally {
-      setUpdatingId('')
+      setUpdatingQtyId('')
     }
   }
 
   const handleRemove = async (productId) => {
     setActionError('')
-    setUpdatingId(productId)
+    setRemovingId(productId)
     try {
       await removeFromCart(productId)
     } catch (err) {
       setActionError(err.response?.data?.message || 'Failed to remove product.')
     } finally {
-      setUpdatingId('')
+      setRemovingId('')
     }
   }
 
@@ -93,7 +94,8 @@ function Cart() {
               {cartItems.map((item) => {
                 const product = item.product
                 if (!product) return null
-                const isUpdating = updatingId === product._id
+                const isUpdatingQty = updatingQtyId === product._id
+                const isRemoving = removingId === product._id
                 const lineTotal = Number(product.price || 0) * Number(item.quantity || 0)
 
                 return (
@@ -118,16 +120,16 @@ function Cart() {
                           <button
                             type="button"
                             onClick={() => handleQuantityChange(product._id, Number(item.quantity) - 1)}
-                            disabled={item.quantity <= 1 || isUpdating}
+                            disabled={item.quantity <= 1 || isUpdatingQty || isRemoving}
                             aria-label="Decrease quantity"
                           >
                             –
                           </button>
-                          <span className="vynk-stepper-val">{item.quantity}</span>
+                          <span className="vynk-stepper-val">{isUpdatingQty ? '...' : item.quantity}</span>
                           <button
                             type="button"
                             onClick={() => handleQuantityChange(product._id, Number(item.quantity) + 1)}
-                            disabled={isUpdating || item.quantity >= (product.stock || 0)}
+                            disabled={isUpdatingQty || isRemoving || item.quantity >= (product.stock || 0)}
                             aria-label="Increase quantity"
                           >
                             +
@@ -143,9 +145,9 @@ function Cart() {
                           type="button"
                           className="vynk-cart-remove-btn"
                           onClick={() => handleRemove(product._id)}
-                          disabled={isUpdating}
+                          disabled={isRemoving || isUpdatingQty}
                         >
-                          {isUpdating ? 'Removing...' : 'Remove'}
+                          {isRemoving ? 'Removing...' : 'Remove'}
                         </button>
                       </div>
                     </div>
