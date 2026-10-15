@@ -1,5 +1,5 @@
 import express from 'express'
-import { addToWishlist, getWishlist, getWishlistCount, removeFromWishlist } from '../controllers/wishlist.controllers.js'
+import { addToWishlist, getWishlist, getWishlistCount, removeFromWishlist } from '../controllers/wishlist.controller.js'
 import isAuthenticated from '../middlewares/authMiddleware.js'
 
 const wishlistRoutes = express.Router()

@@ -3,8 +3,7 @@ import { Link } from 'react-router-dom'
 import { axiosInstance } from '../axiosCalls/axios.js'
 import StatusMessage from '../components/StatusMessage.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
-import WishlistNavLink from '../components/WishlistNavLink.jsx'
-import CartNavLink from '../components/CartNavLink.jsx'
+import Navbar from '../components/Navbar.jsx'
 
 const emptyAddress = { street: '', city: '', postalCode: '', country: '' }
 
@@ -21,7 +20,6 @@ function CustomerProfile() {
 
   useEffect(() => {
     let mounted = true
-
     const loadProfile = async () => {
       try {
         const response = await axiosInstance.get('/customer/me')
@@ -46,14 +44,14 @@ function CustomerProfile() {
     return () => { mounted = false }
   }, [setUser])
 
-  const handleChange = (event) => {
-    setForm((previous) => ({ ...previous, [event.target.name]: event.target.value }))
+  const handleChange = (e) => {
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     setMessage('')
     setError('')
   }
 
-  const handleImageChange = (event) => {
-    const file = event.target.files?.[0]
+  const handleImageChange = (e) => {
+    const file = e.target.files?.[0]
     if (!file) return
     setSelectedImage(file)
     setPreviewImage(URL.createObjectURL(file))
@@ -61,8 +59,8 @@ function CustomerProfile() {
     setError('')
   }
 
-  const handleSubmit = async (event) => {
-    event.preventDefault()
+  const handleSubmit = async (e) => {
+    e.preventDefault()
     setSaving(true)
     setMessage('')
     setError('')
@@ -93,57 +91,112 @@ function CustomerProfile() {
 
       setUser(updatedCustomer)
       setSelectedImage(null)
-      setMessage('Profile updated successfully.')
+      setMessage('Profile settings saved successfully.')
     } catch (requestError) {
-      setError(requestError.response?.data?.message || 'Unable to update your profile.')
+      setError(requestError.response?.data?.message || 'Unable to update profile.')
     } finally {
       setSaving(false)
       setUploading(false)
     }
   }
 
-  if (loading) return <main className="profile-page route-state">Loading your profile...</main>
+  if (loading) {
+    return (
+      <div className="vynk-page-wrapper">
+        <Navbar />
+        <main className="vynk-main-container">
+          <div className="vynk-loading-state">
+            <div className="vynk-spinner" />
+            <p>Loading account details...</p>
+          </div>
+        </main>
+      </div>
+    )
+  }
 
   return (
-    <main className="profile-page shop-home">
-      <nav className="site-nav home-nav" aria-label="Account navigation">
-        <Link className="brand" to="/home" aria-label="Back to Nexora home"><span className="brand-mark">N</span><span>Nexora</span></Link>
-        <div className="nav-actions"><WishlistNavLink /><CartNavLink /><Link className="nav-link" to="/home">Back to shopping</Link></div>
-      </nav>
+    <div className="vynk-page-wrapper">
+      <Navbar />
 
-      <section className="profile-content">
-        <div className="home-heading"><p className="eyebrow">ACCOUNT SETTINGS</p><h1>Your profile<span>.</span></h1><p>Keep your contact and delivery details ready for your next order.</p></div>
+      <main className="vynk-main-container">
+        <header className="vynk-catalog-header">
+          <div>
+            <div className="vynk-greeting-badge">Account Settings</div>
+            <h1 className="vynk-page-title">
+              Your <span>Profile.</span>
+            </h1>
+            <p className="vynk-page-desc">Manage personal contact details and saved delivery address.</p>
+          </div>
+        </header>
+
         <StatusMessage message={error} />
-        {message && <div className="profile-success" role="status">✓ {message}</div>}
+        {message && <div className="vynk-alert-success" style={{ marginBottom: '24px' }}>✓ {message}</div>}
 
-        <form className="profile-layout" onSubmit={handleSubmit}>
-          <section className="profile-card profile-identity">
-            <div className="card-label"><span className="card-number">01</span> CUSTOMER PROFILE</div>
-            <div className="profile-avatar-large">{previewImage || user?.profileImage ? <img src={previewImage || user.profileImage} alt="Profile" /> : user?.fullName?.charAt(0)?.toUpperCase() || 'N'}</div>
-            <label className="image-picker">Choose profile image<input type="file" accept="image/*" onChange={handleImageChange} /></label>
-            {selectedImage && <p className="file-note">{selectedImage.name}</p>}
-            <p className="profile-email">{user?.email}</p>
-          </section>
+        <form className="vynk-profile-grid" onSubmit={handleSubmit}>
+          <aside className="vynk-profile-side-card">
+            <div className="vynk-profile-avatar-box">
+              {previewImage || user?.profileImage ? (
+                <img src={previewImage || user.profileImage} alt="Profile" />
+              ) : (
+                user?.fullName?.charAt(0)?.toUpperCase() || 'V'
+              )}
+            </div>
 
-          <section className="profile-card profile-form-card">
-            <div className="card-label"><span className="card-number">02</span> PERSONAL DETAILS</div>
-            <div className="profile-fields">
-              <label>Full name<input name="fullName" value={form.fullName} onChange={handleChange} required /></label>
-              <label>Email<input name="email" type="email" value={form.email} onChange={handleChange} required /></label>
-              <label>Phone<input name="phone" type="tel" value={form.phone} onChange={handleChange} required /></label>
+            <label className="vynk-upload-label">
+              <span>Change Photo</span>
+              <input type="file" accept="image/*" onChange={handleImageChange} style={{ display: 'none' }} />
+            </label>
+            {selectedImage && <p className="vynk-file-note">{selectedImage.name}</p>}
+
+            <div className="vynk-user-email-tag">{user?.email}</div>
+          </aside>
+
+          <section className="vynk-profile-main-card">
+            <h3 className="vynk-form-section-title">Personal Information</h3>
+            <div className="vynk-form-row-duo">
+              <div className="vynk-form-field">
+                <label className="vynk-field-label">Full Name</label>
+                <input name="fullName" value={form.fullName} onChange={handleChange} className="vynk-field-input" required />
+              </div>
+              <div className="vynk-form-field">
+                <label className="vynk-field-label">Phone Number</label>
+                <input name="phone" type="tel" value={form.phone} onChange={handleChange} className="vynk-field-input" required />
+              </div>
             </div>
-            <div className="card-label address-label"><span className="card-number">03</span> DEFAULT DELIVERY ADDRESS</div>
-            <div className="profile-fields address-fields">
-              <label className="field-wide">Street address<input name="street" value={form.street} onChange={handleChange} placeholder="Apartment, building and street" /></label>
-              <label>City<input name="city" value={form.city} onChange={handleChange} /></label>
-              <label>Postal code<input name="postalCode" value={form.postalCode} onChange={handleChange} /></label>
-              <label>Country<input name="country" value={form.country} onChange={handleChange} /></label>
+
+            <div className="vynk-form-field">
+              <label className="vynk-field-label">Email Address</label>
+              <input name="email" type="email" value={form.email} onChange={handleChange} className="vynk-field-input" required />
             </div>
-            <button className="button button-accent profile-save" type="submit" disabled={saving}>{saving ? (uploading ? 'Uploading image...' : 'Saving changes...') : 'Save profile'}</button>
+
+            <h3 className="vynk-form-section-title" style={{ marginTop: '28px' }}>Default Shipping Address</h3>
+            <div className="vynk-form-field">
+              <label className="vynk-field-label">Street Address</label>
+              <input name="street" value={form.street} onChange={handleChange} placeholder="House / Flat, Street name" className="vynk-field-input" />
+            </div>
+
+            <div className="vynk-form-row-tri">
+              <div className="vynk-form-field">
+                <label className="vynk-field-label">City</label>
+                <input name="city" value={form.city} onChange={handleChange} className="vynk-field-input" />
+              </div>
+              <div className="vynk-form-field">
+                <label className="vynk-field-label">Postal Code</label>
+                <input name="postalCode" value={form.postalCode} onChange={handleChange} className="vynk-field-input" />
+              </div>
+              <div className="vynk-form-field">
+                <label className="vynk-field-label">Country</label>
+                <input name="country" value={form.country} onChange={handleChange} className="vynk-field-input" />
+              </div>
+            </div>
+
+            <button type="submit" className="vynk-btn-primary vynk-btn-lg" style={{ marginTop: '24px' }} disabled={saving}>
+              {saving ? (uploading ? 'Uploading Photo...' : 'Saving Changes...') : 'Save Changes'}
+            </button>
           </section>
         </form>
-      </section>
-    </main>
+      </main>
+    </div>
   )
 }
 

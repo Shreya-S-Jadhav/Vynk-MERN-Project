@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { fetchWishlist, notifyWishlistUpdated, removeWishlistProduct } from '../axiosCalls/WishlistApi.js'
-import WishlistNavLink from '../components/WishlistNavLink.jsx'
-import CartNavLink from '../components/CartNavLink.jsx'
+import Navbar from '../components/Navbar.jsx'
+import { useCart } from '../context/CartContext.jsx'
 
 function formatPrice(price) {
   return `₹${Number(price).toLocaleString('en-IN')}`
@@ -14,6 +14,8 @@ function Wishlist() {
   const [error, setError] = useState('')
   const [actionError, setActionError] = useState('')
   const [removingId, setRemovingId] = useState('')
+  const { addToCart } = useCart()
+  const [addingId, setAddingId] = useState('')
 
   const loadWishlist = useCallback(async () => {
     try {
@@ -35,48 +37,120 @@ function Wishlist() {
   const handleRemove = async (productId) => {
     setRemovingId(productId)
     setActionError('')
-
     try {
       await removeWishlistProduct(productId)
-      setProducts((currentProducts) => currentProducts.filter((product) => product._id !== productId))
+      setProducts((current) => current.filter((p) => p._id !== productId))
       notifyWishlistUpdated()
-    } catch (requestError) {
-      setActionError(requestError.response?.data?.message || 'Unable to remove this product. Please try again.')
+    } catch (err) {
+      setActionError(err.response?.data?.message || 'Unable to remove product from wishlist.')
     } finally {
       setRemovingId('')
     }
   }
 
+  const handleMoveToCart = async (product) => {
+    setAddingId(product._id)
+    setActionError('')
+    try {
+      await addToCart(product._id)
+      await handleRemove(product._id)
+    } catch (err) {
+      setActionError(err.response?.data?.message || 'Unable to move product to cart.')
+    } finally {
+      setAddingId('')
+    }
+  }
+
   return (
-    <main className="wishlist-page shop-home">
-      <nav className="site-nav home-nav" aria-label="Wishlist navigation">
-        <Link className="brand" to="/home" aria-label="Back to Nexora home"><span className="brand-mark">N</span><span>Nexora</span></Link>
-        <div className="nav-actions"><Link className="nav-link" to="/products">Products</Link><WishlistNavLink /><CartNavLink /><Link className="nav-link" to="/profile">Account</Link></div>
-      </nav>
+    <div className="vynk-page-wrapper">
+      <Navbar />
 
-      <section className="wishlist-content">
-        <div className="home-heading"><p className="eyebrow">SAVED FOR LATER</p><h1>Your wishlist<span>.</span></h1><p>{products.length} {products.length === 1 ? 'product' : 'products'} saved for when you’re ready.</p></div>
+      <main className="vynk-main-container">
+        <header className="vynk-catalog-header">
+          <div>
+            <div className="vynk-greeting-badge">Saved Items</div>
+            <h1 className="vynk-page-title">
+              Your <span>Wishlist.</span>
+            </h1>
+            <p className="vynk-page-desc">
+              {products.length} {products.length === 1 ? 'item' : 'items'} saved for later purchase.
+            </p>
+          </div>
+        </header>
 
-        {loading && <div className="wishlist-state" role="status">Loading your wishlist...</div>}
-        {!loading && error && <div className="wishlist-state wishlist-state-error" role="alert"><p>{error}</p><button className="button button-dark" type="button" onClick={loadWishlist}>Try again</button></div>}
-        {!loading && !error && products.length === 0 && <div className="wishlist-empty"><span className="wishlist-empty-icon" aria-hidden="true">♡</span><h2>Your wishlist is empty</h2><p>Save products you love and find them here later.</p><Link className="button button-accent" to="/products">Browse products <span aria-hidden="true">→</span></Link></div>}
-        {!loading && !error && actionError && <p className="wishlist-feedback wishlist-feedback-error" role="alert">{actionError}</p>}
-        {!loading && !error && products.length > 0 && <div className="wishlist-grid">{products.map((product) => (
-          <article className="wishlist-card" key={product._id}>
-            <Link className="wishlist-image-wrap" to={`/products/${product._id}`}><img src={product.image} alt={product.name} /></Link>
-            <div className="wishlist-card-content">
-              <p className="catalog-product-category">{product.category}</p>
-              <h2>{product.name}</h2>
-              <div className="catalog-product-footer"><strong>{formatPrice(product.price)}</strong><span>{product.stock > 0 ? `${product.stock} units left` : 'Out of stock'}</span></div>
-              <Link className="button button-dark catalog-details-button" to={`/products/${product._id}`}>View details <span aria-hidden="true">→</span></Link>
-              <button className="wishlist-action wishlist-remove" type="button" onClick={() => handleRemove(product._id)} disabled={removingId === product._id}>
-                {removingId === product._id ? 'Removing...' : '♥ Remove from Wishlist'}
-              </button>
-            </div>
-          </article>
-        ))}</div>}
-      </section>
-    </main>
+        {actionError && <div className="vynk-alert-error" style={{ marginBottom: '20px' }}>{actionError}</div>}
+
+        {loading && (
+          <div className="vynk-loading-state">
+            <div className="vynk-spinner" />
+            <p>Loading your saved wishlist...</p>
+          </div>
+        )}
+
+        {!loading && error && (
+          <div className="vynk-empty-card">
+            <span className="vynk-empty-icon">⚠️</span>
+            <h3>Unable to load wishlist</h3>
+            <p>{error}</p>
+            <button type="button" className="vynk-btn-secondary" onClick={loadWishlist}>
+              Try Again
+            </button>
+          </div>
+        )}
+
+        {!loading && !error && products.length === 0 && (
+          <div className="vynk-empty-card">
+            <span className="vynk-empty-icon">♥</span>
+            <h3>Your wishlist is empty</h3>
+            <p>Save items you love while browsing to keep them organized in one place.</p>
+            <Link to="/products" className="vynk-btn-primary">
+              Explore Products →
+            </Link>
+          </div>
+        )}
+
+        {!loading && !error && products.length > 0 && (
+          <div className="vynk-products-grid">
+            {products.map((product) => (
+              <article className="vynk-product-card" key={product._id}>
+                <div className="vynk-card-image-wrapper">
+                  <Link to={`/products/${product._id}`} className="vynk-card-image-link">
+                    <img src={product.image} alt={product.name} className="vynk-card-image" />
+                  </Link>
+                  <button
+                    type="button"
+                    className="vynk-wishlist-toggle active"
+                    onClick={() => handleRemove(product._id)}
+                    disabled={removingId === product._id}
+                    title="Remove from wishlist"
+                  >
+                    ✕
+                  </button>
+                </div>
+
+                <div className="vynk-card-body">
+                  <div className="vynk-card-category">{product.category}</div>
+                  <Link to={`/products/${product._id}`} className="vynk-card-title-link">
+                    <h3 className="vynk-card-title">{product.name}</h3>
+                  </Link>
+                  <div className="vynk-card-footer">
+                    <span className="vynk-card-price">{formatPrice(product.price)}</span>
+                    <button
+                      type="button"
+                      className="vynk-btn-primary vynk-btn-sm"
+                      disabled={addingId === product._id || product.stock <= 0}
+                      onClick={() => handleMoveToCart(product)}
+                    >
+                      {addingId === product._id ? 'Moving...' : 'Move to Cart'}
+                    </button>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
+      </main>
+    </div>
   )
 }
 

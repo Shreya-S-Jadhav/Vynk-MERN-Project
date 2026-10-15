@@ -26,7 +26,14 @@ function WishlistNavLink() {
     }
   }, [location.pathname])
 
-  return <Link className="nav-link" to="/wishlist">Wishlist ({count})</Link>
+  const isActive = location.pathname === '/wishlist'
+
+  return (
+    <Link to="/wishlist" className={`vynk-nav-link vynk-wishlist-badge-link ${isActive ? 'active' : ''}`}>
+      <span>Wishlist</span>
+      {count > 0 && <span className="vynk-counter-pill vynk-wishlist-pill">{count}</span>}
+    </Link>
+  )
 }
 
 export default WishlistNavLink

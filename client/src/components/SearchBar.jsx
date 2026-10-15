@@ -1,14 +1,59 @@
-const categories = ['All Categories', 'Electronics', 'Fashion', 'Books', 'Home', 'Beauty', 'Grocery']
+const categories = ['All Categories', 'Electronics', 'Accessories', 'Audio', 'Furniture', 'Lighting', 'Home', 'Fashion']
 
 function SearchBar({ search, setSearch, category, setCategory, sort, setSort, onReset }) {
-  const hasActiveFilters = search.trim() || category !== 'All Categories' || sort
+  const hasActiveFilters = search.trim() || (category && category !== 'All Categories') || sort
 
   return (
-    <div className="catalog-controls">
-      <label className="catalog-search"><span aria-hidden="true">⌕</span><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search products by name..." aria-label="Search products" />{search && <button type="button" className="catalog-clear" onClick={() => setSearch('')} aria-label="Clear search">×</button>}</label>
-      <label className="catalog-select">Category<select value={category} onChange={(event) => setCategory(event.target.value)}>{categories.map((item) => <option key={item}>{item}</option>)}</select></label>
-      <label className="catalog-select">Sort<select value={sort} onChange={(event) => setSort(event.target.value)}><option value="">Featured</option><option value="price_asc">Price: low to high</option><option value="price_desc">Price: high to low</option></select></label>
-      {hasActiveFilters && <button type="button" className="catalog-reset" onClick={onReset}>Reset filters</button>}
+    <div className="vynk-filter-bar">
+      <div className="vynk-search-box">
+        <svg className="vynk-search-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="11" cy="11" r="8" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search products, brands, essentials..."
+          className="vynk-search-input"
+          aria-label="Search products"
+        />
+        {search && (
+          <button type="button" className="vynk-search-clear" onClick={() => setSearch('')} aria-label="Clear search">
+            ✕
+          </button>
+        )}
+      </div>
+
+      <div className="vynk-select-group">
+        <select
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          className="vynk-select-control"
+          aria-label="Filter by category"
+        >
+          {categories.map((c) => (
+            <option key={c} value={c}>{c}</option>
+          ))}
+        </select>
+
+        <select
+          value={sort}
+          onChange={(e) => setSort(e.target.value)}
+          className="vynk-select-control"
+          aria-label="Sort products"
+        >
+          <option value="">Featured</option>
+          <option value="price_asc">Price: Low to High</option>
+          <option value="price_desc">Price: High to Low</option>
+        </select>
+
+        {hasActiveFilters && (
+          <button type="button" className="vynk-reset-filters-btn" onClick={onReset}>
+            Reset
+          </button>
+        )}
+      </div>
     </div>
   )
 }

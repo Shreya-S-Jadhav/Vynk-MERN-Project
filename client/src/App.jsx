@@ -1,4 +1,3 @@
-
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import Home from './Pages/Home.jsx'
 import Landing from './Pages/Landing.jsx'
@@ -10,6 +9,9 @@ import Products from './Pages/Products.jsx'
 import ProductDetails from './Pages/ProductDetails.jsx'
 import Wishlist from './Pages/Wishlist.jsx'
 import Cart from './Pages/Cart.jsx'
+import Checkout from './Pages/Checkout.jsx'
+import OrderSuccess from './Pages/OrderSuccess.jsx'
+import Orders from './Pages/Orders.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
 import PublicRoute from './components/PublicRoute.jsx'
 import { AuthProvider } from './context/AuthContext.jsx'
@@ -30,6 +32,10 @@ function App() {
             <Route path="/products/:id" element={<ProtectedRoute><ProductDetails /></ProtectedRoute>} />
             <Route path="/wishlist" element={<ProtectedRoute><Wishlist /></ProtectedRoute>} />
             <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
+            <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
+            <Route path="/order-success/:id" element={<ProtectedRoute><OrderSuccess /></ProtectedRoute>} />
+            <Route path="/orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
+            <Route path="/orders/:id" element={<ProtectedRoute><OrderSuccess /></ProtectedRoute>} />
             <Route path="/logout" element={<Logout />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
@@ -38,4 +44,5 @@ function App() {
     </AuthProvider>
   )
 }
+
 export default App

@@ -1,9 +1,7 @@
-
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { fetchProduct } from '../axiosCalls/productApi.js'
-import WishlistNavLink from '../components/WishlistNavLink.jsx'
-import CartNavLink from '../components/CartNavLink.jsx'
+import Navbar from '../components/Navbar.jsx'
 import { useCart } from '../context/CartContext.jsx'
 
 function formatPrice(price) {
@@ -17,6 +15,7 @@ function ProductDetails() {
   const [error, setError] = useState('')
   const [adding, setAdding] = useState(false)
   const [actionError, setActionError] = useState('')
+  const [actionSuccess, setActionSuccess] = useState('')
   const { addToCart, cartItems } = useCart()
 
   useEffect(() => {
@@ -27,7 +26,7 @@ function ProductDetails() {
         const result = await fetchProduct(id)
         if (mounted) setProduct(result)
       } catch (requestError) {
-        if (mounted) setError(requestError.response?.status === 404 ? 'Product not found.' : 'Something went wrong while loading this product.')
+        if (mounted) setError(requestError.response?.status === 404 ? 'Product not found.' : 'Unable to load product.')
       } finally {
         if (mounted) setLoading(false)
       }
@@ -37,37 +36,128 @@ function ProductDetails() {
     return () => { mounted = false }
   }, [id])
 
-  const cartQuantity = cartItems.find((item) => item.product?._id === product?._id)?.quantity || 0
+  const cartQuantity = cartItems.find((item) => (item.product?._id || item.product) === product?._id)?.quantity || 0
 
   const handleAddToCart = async () => {
     if (!product || adding) return
+    if (cartQuantity >= product.stock) {
+      setActionError(`Cannot add more. Stock limit of ${product.stock} units reached.`)
+      return
+    }
 
     setActionError('')
+    setActionSuccess('')
     setAdding(true)
     try {
       await addToCart(product._id)
+      setActionSuccess('Added to your shopping cart!')
+      setTimeout(() => setActionSuccess(''), 3000)
     } catch (requestError) {
-      setActionError(requestError.response?.data?.message || 'Unable to add this product to your cart.')
+      setActionError(requestError.response?.data?.message || 'Unable to add product to cart.')
     } finally {
       setAdding(false)
     }
   }
 
+  if (loading) {
+    return (
+      <div className="vynk-page-wrapper">
+        <Navbar />
+        <main className="vynk-main-container">
+          <div className="vynk-loading-state">
+            <div className="vynk-spinner" />
+            <p>Loading product details...</p>
+          </div>
+        </main>
+      </div>
+    )
+  }
 
-  if (loading) return <main className="catalog-page route-state">Loading product...</main>
-  if (error) return <main className="catalog-page catalog-state catalog-error">{error}<Link className="text-link" to="/products">Back to products</Link></main>
+  if (error || !product) {
+    return (
+      <div className="vynk-page-wrapper">
+        <Navbar />
+        <main className="vynk-main-container">
+          <div className="vynk-empty-card">
+            <span className="vynk-empty-icon">🔍</span>
+            <h3>Product Not Found</h3>
+            <p>{error || 'This product might have been moved or is no longer listed.'}</p>
+            <Link to="/products" className="vynk-btn-primary">
+              Return to Products →
+            </Link>
+          </div>
+        </main>
+      </div>
+    )
+  }
 
   return (
-    <main className="catalog-page shop-home">
-       <nav className="site-nav home-nav" aria-label="Product navigation"><Link className="brand" to="/home"><span className="brand-mark">N</span><span>Nexora</span></Link><div className="nav-actions"><WishlistNavLink /><CartNavLink /><Link className="nav-link" to="/products">Back to products</Link></div></nav>
-      <section className="product-detail-content">
-        <Link className="text-link" to="/products">← All products</Link>
-        <div className="product-detail-layout">
-          <div className="product-detail-image"><img src={product.image} alt={product.name} /></div>
-          <div className="product-detail-copy"><p className="eyebrow">{product.category}</p><h1>{product.name}</h1><p className="product-detail-price">{formatPrice(product.price)}</p><p className="product-detail-description">{product.description}</p><p className="product-stock">{product.stock > 0 ? `${product.stock} units available` : 'Currently out of stock'}</p><button className="button button-accent" type="button" disabled={product.stock === 0 || adding} onClick={handleAddToCart}>{adding ? 'Adding...' : cartQuantity > 0 ? `Add another (${cartQuantity})` : 'Add to cart'} <span aria-hidden="true">→</span></button>{actionError && <p className="wishlist-feedback wishlist-feedback-error" role="alert">{actionError}</p>}</div>
+    <div className="vynk-page-wrapper">
+      <Navbar />
+
+      <main className="vynk-main-container">
+        <div className="vynk-breadcrumb">
+          <Link to="/products" className="vynk-back-link">
+            ← Back to collection
+          </Link>
+          <span className="vynk-breadcrumb-sep">/</span>
+          <span>{product.category}</span>
+          <span className="vynk-breadcrumb-sep">/</span>
+          <span className="vynk-breadcrumb-current">{product.name}</span>
         </div>
-      </section>
-    </main>
+
+        <section className="vynk-product-detail-layout">
+          <div className="vynk-detail-gallery">
+            <div className="vynk-detail-image-box">
+              <img src={product.image} alt={product.name} />
+            </div>
+          </div>
+
+          <div className="vynk-detail-info">
+            <div className="vynk-detail-category-badge">{product.category}</div>
+            <h1 className="vynk-detail-title">{product.name}</h1>
+            <div className="vynk-detail-price-row">
+              <span className="vynk-detail-price">{formatPrice(product.price)}</span>
+              <span className={`vynk-stock-chip ${product.stock > 0 ? 'in-stock' : 'out-of-stock'}`}>
+                {product.stock > 0 ? `${product.stock} units available` : 'Out of stock'}
+              </span>
+            </div>
+
+            <p className="vynk-detail-desc">{product.description}</p>
+
+            <div className="vynk-detail-guarantees">
+              <div>✓ Free express shipping across India</div>
+              <div>✓ 7-day replacement guarantee</div>
+              <div>✓ Verified authentic gear</div>
+            </div>
+
+            <div className="vynk-detail-action-box">
+              <button
+                type="button"
+                className="vynk-btn-primary vynk-btn-lg vynk-btn-block"
+                disabled={product.stock === 0 || adding}
+                onClick={handleAddToCart}
+              >
+                {adding ? (
+                  'Adding to Cart...'
+                ) : cartQuantity > 0 ? (
+                  `Add Another (${cartQuantity} in Cart)`
+                ) : (
+                  'Add to Shopping Cart'
+                )}
+              </button>
+
+              <Link to="/cart" className="vynk-btn-secondary vynk-btn-lg vynk-btn-block">
+                View Cart & Checkout →
+              </Link>
+            </div>
+
+            {actionSuccess && <div className="vynk-alert-success">{actionSuccess}</div>}
+            {actionError && <div className="vynk-alert-error">{actionError}</div>}
+          </div>
+        </section>
+      </main>
+    </div>
   )
 }
 

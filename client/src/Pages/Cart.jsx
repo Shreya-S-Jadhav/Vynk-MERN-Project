@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartContext.jsx'
-import WishlistNavLink from '../components/WishlistNavLink.jsx'
-import CartNavLink from '../components/CartNavLink.jsx'
+import Navbar from '../components/Navbar.jsx'
 
 function formatPrice(price) {
   return `₹${Number(price).toLocaleString('en-IN')}`
@@ -21,7 +20,7 @@ function Cart() {
     try {
       await updateQuantity(productId, nextQuantity)
     } catch (err) {
-      setActionError(err.response?.data?.message || 'Failed to update item quantity.')
+      setActionError(err.response?.data?.message || 'Failed to update quantity.')
     } finally {
       setUpdatingId('')
     }
@@ -33,7 +32,7 @@ function Cart() {
     try {
       await removeFromCart(productId)
     } catch (err) {
-      setActionError(err.response?.data?.message || 'Failed to remove product from cart.')
+      setActionError(err.response?.data?.message || 'Failed to remove product.')
     } finally {
       setUpdatingId('')
     }
@@ -42,107 +41,107 @@ function Cart() {
   const itemCount = cartItems.reduce((total, item) => total + Number(item.quantity || 0), 0)
 
   if (cartLoading) {
-    return <main className="catalog-page route-state">Loading your cart...</main>
-  }
-
-  if (cartError) {
     return (
-      <main className="catalog-page catalog-state catalog-error">
-        <div>
-          <p>{cartError}</p>
-          <button type="button" className="catalog-retry" onClick={() => refreshCart()}>Try Again</button>
-        </div>
-      </main>
+      <div className="vynk-page-wrapper">
+        <Navbar />
+        <main className="vynk-main-container">
+          <div className="vynk-loading-state">
+            <div className="vynk-spinner" />
+            <p>Loading your shopping bag...</p>
+          </div>
+        </main>
+      </div>
     )
   }
 
   return (
-    <main className="wishlist-page shop-home">
-      <nav className="site-nav home-nav" aria-label="Cart navigation">
-        <Link className="brand" to="/home" aria-label="Back to Nexora home">
-          <span className="brand-mark">N</span>
-          <span>Nexora</span>
-        </Link>
-        <div className="nav-actions">
-          <Link className="nav-link" to="/products">Products</Link>
-          <WishlistNavLink />
-          <CartNavLink />
-          <Link className="nav-link" to="/profile">Account</Link>
-        </div>
-      </nav>
+    <div className="vynk-page-wrapper">
+      <Navbar />
 
-      <section className="wishlist-content cart-content">
-        <div className="home-heading">
-          <p className="eyebrow">YOUR CART</p>
-          <h1>Ready to checkout<span>.</span></h1>
-          <p>{itemCount} {itemCount === 1 ? 'item' : 'items'} in your bag.</p>
-        </div>
+      <main className="vynk-main-container">
+        <header className="vynk-catalog-header">
+          <div>
+            <div className="vynk-greeting-badge">Your Bag</div>
+            <h1 className="vynk-page-title">
+              Shopping <span>Cart.</span>
+            </h1>
+            <p className="vynk-page-desc">
+              {itemCount} {itemCount === 1 ? 'item' : 'items'} in your cart. Review and proceed to checkout.
+            </p>
+          </div>
+        </header>
 
-        {actionError && (
-          <div className="wishlist-feedback wishlist-feedback-error" style={{ marginBottom: '1.5rem', display: 'block' }} role="alert">
-            {actionError}
+        {actionError && <div className="vynk-alert-error" style={{ marginBottom: '20px' }}>{actionError}</div>}
+        {cartError && (
+          <div className="vynk-alert-error" style={{ marginBottom: '20px' }}>
+            {cartError} <button type="button" onClick={refreshCart} style={{ textDecoration: 'underline', marginLeft: '8px' }}>Retry</button>
           </div>
         )}
 
         {cartItems.length === 0 ? (
-          <div className="wishlist-empty cart-empty">
-            <span className="wishlist-empty-icon" aria-hidden="true">🛒</span>
-            <h2>Your cart is empty</h2>
-            <p>Looks like you haven't added anything yet.</p>
-            <Link className="button button-accent" to="/products">Browse products <span aria-hidden="true">→</span></Link>
+          <div className="vynk-empty-card">
+            <span className="vynk-empty-icon">🛍️</span>
+            <h3>Your cart is empty</h3>
+            <p>Explore our products and find something exceptional to add.</p>
+            <Link to="/products" className="vynk-btn-primary">
+              Start Shopping →
+            </Link>
           </div>
         ) : (
-          <div className="cart-layout">
-            <section className="cart-items-panel">
+          <div className="vynk-cart-layout">
+            <section className="vynk-cart-items-column">
               {cartItems.map((item) => {
                 const product = item.product
                 if (!product) return null
-
                 const isUpdating = updatingId === product._id
                 const lineTotal = Number(product.price || 0) * Number(item.quantity || 0)
 
                 return (
-                  <article className="cart-item-card" key={product._id}>
-                    <Link className="wishlist-image-wrap cart-image-wrap" to={`/products/${product._id}`}>
+                  <article className="vynk-cart-row-card" key={product._id}>
+                    <Link to={`/products/${product._id}`} className="vynk-cart-thumb-wrap">
                       <img src={product.image} alt={product.name} />
                     </Link>
-                    <div className="cart-item-details">
-                      <div className="cart-item-header">
+
+                    <div className="vynk-cart-row-info">
+                      <div className="vynk-cart-row-header">
                         <div>
-                          <p className="catalog-product-category">{product.category}</p>
-                          <h2>{product.name}</h2>
+                          <span className="vynk-card-category">{product.category}</span>
+                          <Link to={`/products/${product._id}`}>
+                            <h3 className="vynk-cart-row-title">{product.name}</h3>
+                          </Link>
                         </div>
-                        <div className="cart-price-unit">
-                          <strong>{formatPrice(product.price)}</strong>
-                        </div>
+                        <span className="vynk-cart-row-unit-price">{formatPrice(product.price)}</span>
                       </div>
-                      <div className="cart-item-controls">
-                        <div className="quantity-control">
+
+                      <div className="vynk-cart-row-controls">
+                        <div className="vynk-stepper">
                           <button
                             type="button"
                             onClick={() => handleQuantityChange(product._id, Number(item.quantity) - 1)}
                             disabled={item.quantity <= 1 || isUpdating}
-                            aria-label={`Decrease quantity of ${product.name}`}
+                            aria-label="Decrease quantity"
                           >
-                            -
+                            –
                           </button>
-                          <span>{item.quantity}</span>
+                          <span className="vynk-stepper-val">{item.quantity}</span>
                           <button
                             type="button"
                             onClick={() => handleQuantityChange(product._id, Number(item.quantity) + 1)}
                             disabled={isUpdating || item.quantity >= (product.stock || 0)}
-                            aria-label={`Increase quantity of ${product.name}`}
+                            aria-label="Increase quantity"
                           >
                             +
                           </button>
                         </div>
-                        <div className="cart-line-total">
-                          <span>Total: </span>
-                          <strong>{formatPrice(lineTotal)}</strong>
+
+                        <div className="vynk-cart-row-total-group">
+                          <span className="vynk-cart-line-label">Total:</span>
+                          <strong className="vynk-cart-line-price">{formatPrice(lineTotal)}</strong>
                         </div>
+
                         <button
                           type="button"
-                          className="wishlist-action wishlist-remove cart-remove"
+                          className="vynk-cart-remove-btn"
                           onClick={() => handleRemove(product._id)}
                           disabled={isUpdating}
                         >
@@ -155,34 +154,48 @@ function Cart() {
               })}
             </section>
 
-            <aside className="cart-summary">
-              <h3>Order Summary</h3>
-              <div className="summary-row">
-                <span>Items ({itemCount})</span>
-                <strong>{itemCount} units</strong>
-              </div>
-              <div className="summary-row">
-                <span>Subtotal</span>
+            <aside className="vynk-cart-summary-card">
+              <h3 className="vynk-summary-heading">Order Summary</h3>
+
+              <div className="vynk-summary-row">
+                <span>Items Subtotal</span>
                 <strong>{formatPrice(subtotal)}</strong>
               </div>
-              <div className="summary-divider" />
-              <div className="summary-row summary-total">
-                <span>Estimated Total</span>
+
+              <div className="vynk-summary-row">
+                <span>Shipping</span>
+                <span className="vynk-badge-free">FREE</span>
+              </div>
+
+              <div className="vynk-summary-row">
+                <span>Estimated Tax</span>
+                <span>Included</span>
+              </div>
+
+              <div className="vynk-summary-divider" />
+
+              <div className="vynk-summary-row vynk-summary-grand">
+                <span>Total Amount</span>
                 <strong>{formatPrice(subtotal)}</strong>
               </div>
+
               <button
                 type="button"
-                className="button button-accent cart-checkout-button"
-                disabled={cartItems.length === 0}
+                className="vynk-btn-primary vynk-btn-lg vynk-btn-block"
+                style={{ marginTop: '20px' }}
                 onClick={() => navigate('/checkout')}
               >
-                Proceed to Checkout <span aria-hidden="true">→</span>
+                Proceed to Checkout →
               </button>
+
+              <div className="vynk-summary-assurance">
+                🔒 Safe & secure encrypted payments with Razorpay
+              </div>
             </aside>
           </div>
         )}
-      </section>
-    </main>
+      </main>
+    </div>
   )
 }
 

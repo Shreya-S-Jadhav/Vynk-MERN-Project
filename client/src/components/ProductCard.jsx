@@ -10,10 +10,8 @@ function formatPrice(price) {
 function ProductCard({ product, isWishlisted = false, onWishlistChange }) {
   const [saved, setSaved] = useState(isWishlisted)
   const [saving, setSaving] = useState(false)
-  const [message, setMessage] = useState('')
-  const [error, setError] = useState('')
   const [addingToCart, setAddingToCart] = useState(false)
-  const [cartFeedback, setCartFeedback] = useState('')
+  const [feedback, setFeedback] = useState('')
   const { addToCart, cartItems } = useCart()
 
   const cartItem = cartItems.find((item) => (item.product?._id || item.product) === product._id)
@@ -21,97 +19,107 @@ function ProductCard({ product, isWishlisted = false, onWishlistChange }) {
 
   useEffect(() => { setSaved(isWishlisted) }, [isWishlisted])
 
-  const handleWishlistClick = async () => {
+  const handleWishlistClick = async (e) => {
+    e.preventDefault()
+    e.stopPropagation()
     if (saving) return
 
     setSaving(true)
-    setMessage('')
-    setError('')
+    setFeedback('')
 
     try {
       if (saved) {
         await removeWishlistProduct(product._id)
         setSaved(false)
         onWishlistChange?.(product._id, false)
-        setMessage('Removed from your wishlist.')
       } else {
         await addWishlistProduct(product._id)
         setSaved(true)
         onWishlistChange?.(product._id, true)
-        setMessage('Added to your wishlist.')
       }
       notifyWishlistUpdated()
-    } catch (requestError) {
-      if (requestError.response?.status === 409) {
-        setSaved(true)
-        onWishlistChange?.(product._id, true)
-        setError('This product is already in your wishlist.')
-        notifyWishlistUpdated()
-      } else {
-        setError(requestError.response?.data?.message || 'Unable to update your wishlist. Please try again.')
-      }
+    } catch (err) {
+      setFeedback(err.response?.data?.message || 'Wishlist update failed')
     } finally {
       setSaving(false)
     }
   }
 
-  const handleAddToCart = async () => {
+  const handleAddToCart = async (e) => {
+    e.preventDefault()
     if (addingToCart || product.stock <= 0) return
     if (cartQuantity >= product.stock) {
-      setCartFeedback(`Cannot add more. Stock limit of ${product.stock} reached.`)
+      setFeedback(`Max stock (${product.stock}) reached`)
       return
     }
 
     setAddingToCart(true)
-    setCartFeedback('')
+    setFeedback('')
     try {
       await addToCart(product._id)
-      setCartFeedback('Added to cart!')
-    } catch (requestError) {
-      setCartFeedback(requestError.response?.data?.message || 'Unable to add to cart.')
+      setFeedback('Added to cart')
+      setTimeout(() => setFeedback(''), 2500)
+    } catch (err) {
+      setFeedback(err.response?.data?.message || 'Unable to add to cart')
     } finally {
       setAddingToCart(false)
     }
   }
 
   return (
-    <article className="catalog-product-card">
-      <Link to={`/products/${product._id}`} className="catalog-product-image-wrap">
-        <img src={product.image} alt={product.name} className="catalog-product-image" />
-      </Link>
-      <div className="catalog-product-meta">
-        <p className="catalog-product-category">{product.category}</p>
-        <h2>{product.name}</h2>
-        <p className="catalog-product-description">{product.description}</p>
-        <div className="catalog-product-footer">
-          <strong>{formatPrice(product.price)}</strong>
-          <span>{product.stock > 0 ? `${product.stock} units left` : 'Out of stock'}</span>
-        </div>
-        <div className="product-card-actions">
+    <article className="vynk-product-card">
+      <div className="vynk-card-image-wrapper">
+        <Link to={`/products/${product._id}`} className="vynk-card-image-link">
+          <img src={product.image} alt={product.name} className="vynk-card-image" loading="lazy" />
+        </Link>
+        <button
+          type="button"
+          className={`vynk-wishlist-toggle ${saved ? 'active' : ''}`}
+          onClick={handleWishlistClick}
+          disabled={saving}
+          aria-label={saved ? 'Remove from wishlist' : 'Add to wishlist'}
+        >
+          <svg viewBox="0 0 24 24" width="18" height="18" fill={saved ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+          </svg>
+        </button>
+        {product.stock <= 5 && product.stock > 0 && (
+          <span className="vynk-card-badge-stock">Only {product.stock} left</span>
+        )}
+      </div>
+
+      <div className="vynk-card-body">
+        <div className="vynk-card-category">{product.category}</div>
+        <Link to={`/products/${product._id}`} className="vynk-card-title-link">
+          <h3 className="vynk-card-title">{product.name}</h3>
+        </Link>
+        <p className="vynk-card-desc">{product.description}</p>
+
+        <div className="vynk-card-footer">
+          <div className="vynk-card-price-col">
+            <span className="vynk-card-price">{formatPrice(product.price)}</span>
+            <span className="vynk-card-stock-indicator">
+              {product.stock > 0 ? '● In Stock' : '○ Out of stock'}
+            </span>
+          </div>
+
           <button
-            className="button button-accent product-card-cart-btn"
             type="button"
+            className="vynk-btn-cart"
             disabled={product.stock <= 0 || addingToCart || cartQuantity >= product.stock}
             onClick={handleAddToCart}
           >
-            {addingToCart ? 'Adding...' : cartQuantity > 0 ? `Add Another (${cartQuantity})` : 'Add to Cart'}
+            {addingToCart ? (
+              'Adding...'
+            ) : cartQuantity > 0 ? (
+              `Added (${cartQuantity})`
+            ) : (
+              '+ Add to Cart'
+            )}
           </button>
-          <Link className="button button-dark catalog-details-button" to={`/products/${product._id}`}>
-            View details <span aria-hidden="true">→</span>
-          </Link>
         </div>
-        <button
-          className={`wishlist-action${saved ? ' wishlist-action-saved' : ''}`}
-          type="button"
-          onClick={handleWishlistClick}
-          disabled={saving}
-          aria-pressed={saved}
-        >
-          {saving ? 'Saving...' : saved ? '♥ Remove from Wishlist' : '♡ Add to Wishlist'}
-        </button>
-        {cartFeedback && <p className="wishlist-feedback" role="status">{cartFeedback}</p>}
-        {message && <p className="wishlist-feedback" role="status">{message}</p>}
-        {error && <p className="wishlist-feedback wishlist-feedback-error" role="alert">{error}</p>}
+
+        {feedback && <div className="vynk-card-alert">{feedback}</div>}
       </div>
     </article>
   )
