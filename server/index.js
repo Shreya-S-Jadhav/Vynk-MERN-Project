@@ -7,6 +7,7 @@ import cors from 'cors'
 import customerRoutes from './routes/customer.routes.js'
 import productRoutes from './routes/product.routes.js'
 import wishlistRoutes from './routes/wishlist.routes.js'
+import cartRoutes from './routes/cart.routes.js'
 
 const app = express()
 const Port = 8084
@@ -19,7 +20,7 @@ if (!process.env.dbURL) {
 
 app.use(cors({
     origin: 'http://localhost:5173',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true,
 }))
 
@@ -29,6 +30,7 @@ app.use(express.json())
 app.use('/customer', customerRoutes)
 app.use('/products', productRoutes)
 app.use('/wishlist', wishlistRoutes)
+app.use('/cart', cartRoutes)
 
 app.get('/', (req, res) => {
     res.send("Server is running")

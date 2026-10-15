@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { fetchWishlist, notifyWishlistUpdated, removeWishlistProduct } from '../axiosCalls/wishlistApi.js'
+import { fetchWishlist, notifyWishlistUpdated, removeWishlistProduct } from '../axiosCalls/WishlistApi.js'
 import WishlistNavLink from '../components/WishlistNavLink.jsx'
+import CartNavLink from '../components/CartNavLink.jsx'
 
 function formatPrice(price) {
   return `₹${Number(price).toLocaleString('en-IN')}`
@@ -50,7 +51,7 @@ function Wishlist() {
     <main className="wishlist-page shop-home">
       <nav className="site-nav home-nav" aria-label="Wishlist navigation">
         <Link className="brand" to="/home" aria-label="Back to Nexora home"><span className="brand-mark">N</span><span>Nexora</span></Link>
-        <div className="nav-actions"><Link className="nav-link" to="/products">Products</Link><WishlistNavLink /><Link className="nav-link" to="/profile">Account</Link></div>
+        <div className="nav-actions"><Link className="nav-link" to="/products">Products</Link><WishlistNavLink /><CartNavLink /><Link className="nav-link" to="/profile">Account</Link></div>
       </nav>
 
       <section className="wishlist-content">

@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
 import WishlistNavLink from '../components/WishlistNavLink.jsx'
+import CartNavLink from '../components/CartNavLink.jsx'
 
 
 function Home() {
@@ -20,7 +21,7 @@ function Home() {
           <span>Nexora</span>
         </Link>
         <div className="market-search" role="search"><span aria-hidden="true">⌕</span><span>Search products, brands and more</span></div>
-        <div className="nav-actions"><Link className="nav-link" to="/products">Products</Link><WishlistNavLink /><Link className="nav-link" to="/profile">Account</Link><Link className="nav-link" to="/home">Orders</Link><span className="cart-link">▱ Cart</span><button className="nav-link logout-button" type="button" onClick={handleLogout}>Log out</button></div>
+        <div className="nav-actions"><Link className="nav-link" to="/products">Products</Link><WishlistNavLink /><CartNavLink /><Link className="nav-link" to="/profile">Account</Link><Link className="nav-link" to="/home">Orders</Link><button className="nav-link logout-button" type="button" onClick={handleLogout}>Log out</button></div>
       </nav>
 
       <section className="home-content">

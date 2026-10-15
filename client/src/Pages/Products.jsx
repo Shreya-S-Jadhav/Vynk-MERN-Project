@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom'
 import ProductCard from '../components/ProductCard.jsx'
 import SearchBar from '../components/SearchBar.jsx'
 import { fetchProducts } from '../axiosCalls/productApi.js'
-import { fetchWishlist } from '../axiosCalls/wishlistApi.js'
+import { fetchWishlist } from '../axiosCalls/WishlistApi.js'
 import WishlistNavLink from '../components/WishlistNavLink.jsx'
+import CartNavLink from '../components/CartNavLink.jsx'
 
 function Products() {
   const [products, setProducts] = useState([])
@@ -67,7 +68,7 @@ function Products() {
     <main className="catalog-page shop-home">
       <nav className="site-nav home-nav" aria-label="Catalog navigation">
         <Link className="brand" to="/home" aria-label="Back to Nexora home"><span className="brand-mark">N</span><span>Nexora</span></Link>
-        <div className="nav-actions"><Link className="nav-link" to="/products">Products</Link><WishlistNavLink /><Link className="nav-link" to="/profile">Account</Link><Link className="cart-link" to="/home">▱ Cart</Link></div>
+        <div className="nav-actions"><Link className="nav-link" to="/products">Products</Link><WishlistNavLink /><CartNavLink /><Link className="nav-link" to="/profile">Account</Link></div>
       </nav>
 
       <section className="catalog-content">
